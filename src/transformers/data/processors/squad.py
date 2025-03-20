@@ -16,6 +16,7 @@ import json
 import os
 from functools import partial
 from multiprocessing import Pool, cpu_count
+from typing import Optional
 
 import numpy as np
 from tqdm import tqdm
@@ -800,7 +801,7 @@ class SquadFeatures:
         start_position,
         end_position,
         is_impossible,
-        qas_id: str = None,
+        qas_id: Optional[str] = None,
         encoding: BatchEncoding = None,
     ):
         self.input_ids = input_ids
