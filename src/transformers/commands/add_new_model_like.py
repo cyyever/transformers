@@ -21,7 +21,8 @@ from dataclasses import dataclass
 from datetime import date
 from itertools import chain
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Pattern, Tuple, Union
+from re import Pattern
+from typing import Any, Callable, Optional, Union
 
 import yaml
 
@@ -141,7 +142,7 @@ def find_indent(line: str) -> int:
     return len(search.groups()[0])
 
 
-def parse_module_content(content: str) -> List[str]:
+def parse_module_content(content: str) -> list[str]:
     """
     Parse the content of a module in the list of objects it defines.
 
@@ -316,7 +317,7 @@ def add_content_to_file(
 
     </Tip>
     """
-    with open(file_name, "r", encoding="utf-8") as f:
+    with open(file_name, encoding="utf-8") as f:
         old_content = f.read()
 
     new_content = add_content_to_text(
@@ -329,7 +330,7 @@ def add_content_to_file(
 
 def replace_model_patterns(
     text: str, old_model_patterns: ModelPatterns, new_model_patterns: ModelPatterns
-) -> Tuple[str, str]:
+) -> tuple[str, str]:
     """
     Replace all patterns present in a given text.
 
@@ -512,7 +513,7 @@ def duplicate_module(
     new_model_patterns: ModelPatterns,
     dest_file: Optional[str] = None,
     add_copied_from: bool = True,
-    attrs_to_remove: List[str] = None,
+    attrs_to_remove: list[str] = None,
 ):
     """
     Create a new module from an existing one and adapting all function and classes names from old patterns to new ones.
@@ -530,7 +531,7 @@ def duplicate_module(
             old_model_patterns.model_lower_cased, new_model_patterns.model_lower_cased
         )
 
-    with open(module_file, "r", encoding="utf-8") as f:
+    with open(module_file, encoding="utf-8") as f:
         content = f.read()
 
     content = re.sub(r"# Copyright (\d+)\s", f"# Copyright {CURRENT_YEAR} ", content)
@@ -578,8 +579,8 @@ def duplicate_module(
 
 
 def filter_framework_files(
-    files: List[Union[str, os.PathLike]], frameworks: Optional[List[str]] = None
-) -> List[Union[str, os.PathLike]]:
+    files: list[Union[str, os.PathLike]], frameworks: Optional[list[str]] = None
+) -> list[Union[str, os.PathLike]]:
     """
     Filter a list of files to only keep the ones corresponding to a list of frameworks.
 
@@ -610,7 +611,7 @@ def filter_framework_files(
     return [framework_to_file[f] for f in frameworks if f in framework_to_file] + others
 
 
-def get_model_files(model_type: str, frameworks: Optional[List[str]] = None) -> Dict[str, Union[Path, List[Path]]]:
+def get_model_files(model_type: str, frameworks: Optional[list[str]] = None) -> dict[str, Union[Path, list[Path]]]:
     """
     Retrieves all the files associated to a model.
 
@@ -656,7 +657,7 @@ _re_checkpoint_for_doc = re.compile(r"^_CHECKPOINT_FOR_DOC\s+=\s+(\S*)\s*$", fla
 
 
 def find_base_model_checkpoint(
-    model_type: str, model_files: Optional[Dict[str, Union[Path, List[Path]]]] = None
+    model_type: str, model_files: Optional[dict[str, Union[Path, list[Path]]]] = None
 ) -> str:
     """
     Finds the model checkpoint used in the docstrings for a given model.
@@ -676,7 +677,7 @@ def find_base_model_checkpoint(
         if "modeling" not in str(fname):
             continue
 
-        with open(fname, "r", encoding="utf-8") as f:
+        with open(fname, encoding="utf-8") as f:
             content = f.read()
             if _re_checkpoint_for_doc.search(content) is not None:
                 checkpoint = _re_checkpoint_for_doc.search(content).groups()[0]
@@ -706,7 +707,7 @@ def get_default_frameworks():
 _re_model_mapping = re.compile("MODEL_([A-Z_]*)MAPPING_NAMES")
 
 
-def retrieve_model_classes(model_type: str, frameworks: Optional[List[str]] = None) -> Dict[str, List[str]]:
+def retrieve_model_classes(model_type: str, frameworks: Optional[list[str]] = None) -> dict[str, list[str]]:
     """
     Retrieve the model classes associated to a given model.
 
@@ -747,7 +748,7 @@ def retrieve_model_classes(model_type: str, frameworks: Optional[List[str]] = No
     return model_classes
 
 
-def retrieve_info_for_model(model_type, frameworks: Optional[List[str]] = None):
+def retrieve_info_for_model(model_type, frameworks: Optional[list[str]] = None):
     """
     Retrieves all the information from a given model_type.
 
@@ -826,7 +827,7 @@ def retrieve_info_for_model(model_type, frameworks: Optional[List[str]] = None):
 
 
 def clean_frameworks_in_init(
-    init_file: Union[str, os.PathLike], frameworks: Optional[List[str]] = None, keep_processing: bool = True
+    init_file: Union[str, os.PathLike], frameworks: Optional[list[str]] = None, keep_processing: bool = True
 ):
     """
     Removes all the import lines that don't belong to a given list of frameworks or concern tokenizers/feature
@@ -858,7 +859,7 @@ def clean_frameworks_in_init(
     re_else = re.compile(r"\s*else:")
     re_is_xxx_available = re.compile(rf"is_({remove_pattern})_available")
 
-    with open(init_file, "r", encoding="utf-8") as f:
+    with open(init_file, encoding="utf-8") as f:
         content = f.read()
 
     lines = content.split("\n")
@@ -907,7 +908,7 @@ def clean_frameworks_in_init(
 def add_model_to_main_init(
     old_model_patterns: ModelPatterns,
     new_model_patterns: ModelPatterns,
-    frameworks: Optional[List[str]] = None,
+    frameworks: Optional[list[str]] = None,
     with_processing: bool = True,
 ):
     """
@@ -921,7 +922,7 @@ def add_model_to_main_init(
         with_processing (`bool`, *optional*, defaults to `True`):
             Whether the tokenizer/feature extractor/processor of the model should also be added to the init or not.
     """
-    with open(TRANSFORMERS_PATH / "__init__.py", "r", encoding="utf-8") as f:
+    with open(TRANSFORMERS_PATH / "__init__.py", encoding="utf-8") as f:
         content = f.read()
 
     lines = content.split("\n")
@@ -1005,7 +1006,7 @@ def insert_tokenizer_in_auto_module(old_model_patterns: ModelPatterns, new_model
     if old_model_patterns.tokenizer_class is None or new_model_patterns.tokenizer_class is None:
         return
 
-    with open(TRANSFORMERS_PATH / "models" / "auto" / "tokenization_auto.py", "r", encoding="utf-8") as f:
+    with open(TRANSFORMERS_PATH / "models" / "auto" / "tokenization_auto.py", encoding="utf-8") as f:
         content = f.read()
 
     lines = content.split("\n")
@@ -1057,7 +1058,7 @@ AUTO_CLASSES_PATTERNS = {
 
 
 def add_model_to_auto_classes(
-    old_model_patterns: ModelPatterns, new_model_patterns: ModelPatterns, model_classes: Dict[str, List[str]]
+    old_model_patterns: ModelPatterns, new_model_patterns: ModelPatterns, model_classes: dict[str, list[str]]
 ):
     """
     Add a model to the relevant mappings in the auto module.
@@ -1158,7 +1159,7 @@ def duplicate_doc_file(
     old_model_patterns: ModelPatterns,
     new_model_patterns: ModelPatterns,
     dest_file: Optional[Union[str, os.PathLike]] = None,
-    frameworks: Optional[List[str]] = None,
+    frameworks: Optional[list[str]] = None,
 ):
     """
     Duplicate a documentation file and adapts it for a new model.
@@ -1172,7 +1173,7 @@ def duplicate_doc_file(
         frameworks (`List[str]`, *optional*):
             If passed, will only keep the model classes corresponding to this list of frameworks in the new doc file.
     """
-    with open(doc_file, "r", encoding="utf-8") as f:
+    with open(doc_file, encoding="utf-8") as f:
         content = f.read()
 
     content = re.sub(r"<!--\s*Copyright (\d+)\s", f"<!--Copyright {CURRENT_YEAR} ", content)
@@ -1264,7 +1265,7 @@ def insert_model_in_doc_toc(old_model_patterns, new_model_patterns):
         new_model_patterns (`ModelPatterns`): The patterns for the new model.
     """
     toc_file = REPO_PATH / "docs" / "source" / "en" / "_toctree.yml"
-    with open(toc_file, "r", encoding="utf8") as f:
+    with open(toc_file, encoding="utf8") as f:
         content = yaml.safe_load(f)
 
     # Get to the model API doc
@@ -1309,7 +1310,7 @@ def create_new_model_like(
     model_type: str,
     new_model_patterns: ModelPatterns,
     add_copied_from: bool = True,
-    frameworks: Optional[List[str]] = None,
+    frameworks: Optional[list[str]] = None,
     old_checkpoint: Optional[str] = None,
     create_fast_image_processor: bool = False,
 ):
@@ -1513,7 +1514,7 @@ class AddNewModelLikeCommand(BaseTransformersCLICommand):
 
     def __init__(self, config_file=None, path_to_repo=None, *args):
         if config_file is not None:
-            with open(config_file, "r", encoding="utf-8") as f:
+            with open(config_file, encoding="utf-8") as f:
                 config = json.load(f)
             self.old_model_type = config["old_model_type"]
             self.model_patterns = ModelPatterns(**config["new_model_patterns"])

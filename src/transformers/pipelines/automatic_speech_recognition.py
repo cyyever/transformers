@@ -13,7 +13,7 @@
 # limitations under the License.
 import warnings
 from collections import defaultdict
-from typing import TYPE_CHECKING, Dict, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 import numpy as np
 import requests
@@ -565,7 +565,7 @@ class AutomaticSpeechRecognitionPipeline(ChunkPipeline):
         return {"is_last": is_last, **out, **extra}
 
     def postprocess(
-        self, model_outputs, decoder_kwargs: Optional[Dict] = None, return_timestamps=None, return_language=None
+        self, model_outputs, decoder_kwargs: Optional[dict] = None, return_timestamps=None, return_language=None
     ):
         # Optional return types
         optional = {}

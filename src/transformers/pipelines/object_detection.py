@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 from ..utils import add_end_docstrings, is_torch_available, is_vision_available, logging, requires_backends
 from .base import Pipeline, build_pipeline_init_args
@@ -19,8 +19,8 @@ if is_torch_available():
 logger = logging.get_logger(__name__)
 
 
-Prediction = Dict[str, Any]
-Predictions = List[Prediction]
+Prediction = dict[str, Any]
+Predictions = list[Prediction]
 
 
 @add_end_docstrings(build_pipeline_init_args(has_image_processor=True))
@@ -69,7 +69,7 @@ class ObjectDetectionPipeline(Pipeline):
             postprocess_kwargs["threshold"] = kwargs["threshold"]
         return preprocess_params, {}, postprocess_kwargs
 
-    def __call__(self, *args, **kwargs) -> Union[Predictions, List[Prediction]]:
+    def __call__(self, *args, **kwargs) -> Union[Predictions, list[Prediction]]:
         """
         Detect objects (bounding boxes & classes) in the image(s) passed as inputs.
 
@@ -169,7 +169,7 @@ class ObjectDetectionPipeline(Pipeline):
 
         return annotation
 
-    def _get_bounding_box(self, box: "torch.Tensor") -> Dict[str, int]:
+    def _get_bounding_box(self, box: "torch.Tensor") -> dict[str, int]:
         """
         Turns list [xmin, xmax, ymin, ymax] into dict { "xmin": xmin, ... }
 

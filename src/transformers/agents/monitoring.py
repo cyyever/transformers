@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding=utf-8
 
 # Copyright 2024 The HuggingFace Inc. team. All rights reserved.
 #
@@ -75,8 +74,7 @@ def stream_to_gradio(agent, task: str, test_mode: bool = False, **kwargs):
 
     for step_log in agent.run(task, stream=True, **kwargs):
         if isinstance(step_log, dict):
-            for message in pull_message(step_log, test_mode=test_mode):
-                yield message
+            yield from pull_message(step_log, test_mode=test_mode)
 
     final_answer = step_log  # Last log is the run's final_answer
 

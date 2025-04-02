@@ -1,6 +1,6 @@
 import warnings
 from collections import UserDict
-from typing import List, Union
+from typing import Union
 
 from ..utils import (
     add_end_docstrings,
@@ -74,7 +74,7 @@ class ZeroShotImageClassificationPipeline(Pipeline):
             else MODEL_FOR_ZERO_SHOT_IMAGE_CLASSIFICATION_MAPPING_NAMES
         )
 
-    def __call__(self, image: Union[str, List[str], "Image", List["Image"]] = None, **kwargs):
+    def __call__(self, image: Union[str, list[str], "Image", list["Image"]] = None, **kwargs):
         """
         Assign labels to the image(s) passed as inputs.
 

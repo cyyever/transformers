@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 import numpy as np
 
@@ -23,8 +23,8 @@ if is_torch_available():
 logger = logging.get_logger(__name__)
 
 
-Prediction = Dict[str, Any]
-Predictions = List[Prediction]
+Prediction = dict[str, Any]
+Predictions = list[Prediction]
 
 
 @add_end_docstrings(build_pipeline_init_args(has_image_processor=True))
@@ -94,7 +94,7 @@ class ImageSegmentationPipeline(Pipeline):
 
         return preprocess_kwargs, {}, postprocess_kwargs
 
-    def __call__(self, inputs=None, **kwargs) -> Union[Predictions, List[Prediction]]:
+    def __call__(self, inputs=None, **kwargs) -> Union[Predictions, list[Prediction]]:
         """
         Perform segmentation (detect masks & classes) in the image(s) passed as inputs.
 

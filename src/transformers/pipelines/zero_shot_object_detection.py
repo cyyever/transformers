@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 from ..utils import add_end_docstrings, is_torch_available, is_vision_available, logging, requires_backends
 from .base import ChunkPipeline, build_pipeline_init_args
@@ -64,8 +64,8 @@ class ZeroShotObjectDetectionPipeline(ChunkPipeline):
 
     def __call__(
         self,
-        image: Union[str, "Image.Image", List[Dict[str, Any]]],
-        candidate_labels: Union[str, List[str]] = None,
+        image: Union[str, "Image.Image", list[dict[str, Any]]],
+        candidate_labels: Union[str, list[str]] = None,
         **kwargs,
     ):
         """
@@ -213,7 +213,7 @@ class ZeroShotObjectDetectionPipeline(ChunkPipeline):
 
         return results
 
-    def _get_bounding_box(self, box: "torch.Tensor") -> Dict[str, int]:
+    def _get_bounding_box(self, box: "torch.Tensor") -> dict[str, int]:
         """
         Turns list [xmin, xmax, ymin, ymax] into dict { "xmin": xmin, ... }
 

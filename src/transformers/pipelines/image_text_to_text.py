@@ -1,4 +1,3 @@
-# coding=utf-8
 # Copyright 2024 The HuggingFace Inc. team. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +14,7 @@
 
 import enum
 from collections.abc import Iterable  # pylint: disable=g-importing-member
-from typing import Dict, List, Optional, Union
+from typing import Optional, Union
 
 from ..processing_utils import ProcessingKwargs, Unpack
 from ..utils import (
@@ -54,7 +53,7 @@ class Chat:
     to this format because the rest of the pipeline code tends to assume that lists of messages are
     actually a batch of samples rather than messages in the same conversation."""
 
-    def __init__(self, messages: Dict, images: Union[str, List[str], "Image.Image", List["Image.Image"]]):
+    def __init__(self, messages: dict, images: Union[str, list[str], "Image.Image", list["Image.Image"]]):
         for message in messages:
             if not ("role" in message and "content" in message):
                 raise ValueError("When passing chat dicts as input, each dict must have a 'role' and 'content' key.")
@@ -65,7 +64,7 @@ class Chat:
 
 
 def retrieve_images_in_messages(
-    messages: dict, images: Optional[Union[str, List[str], "Image.Image", List["Image.Image"]]]
+    messages: dict, images: Optional[Union[str, list[str], "Image.Image", list["Image.Image"]]]
 ):
     """
     Retrieve and combine images from the chat and the images passed as input.
@@ -245,9 +244,9 @@ class ImageTextToTextPipeline(Pipeline):
     def __call__(
         self,
         images: Optional[
-            Union[str, List[str], List[List[str]], "Image.Image", List["Image.Image"], List[List["Image.Image"]]]
+            Union[str, list[str], list[list[str]], "Image.Image", list["Image.Image"], list[list["Image.Image"]]]
         ] = None,
-        text: Optional[Union[str, List[str], List[dict]]] = None,
+        text: Optional[Union[str, list[str], list[dict]]] = None,
         **kwargs,
     ):
         """

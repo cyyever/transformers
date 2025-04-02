@@ -1,6 +1,5 @@
 import inspect
 import warnings
-from typing import Dict
 
 import numpy as np
 
@@ -165,7 +164,7 @@ class TextClassificationPipeline(Pipeline):
         else:
             return result
 
-    def preprocess(self, inputs, **tokenizer_kwargs) -> Dict[str, GenericTensor]:
+    def preprocess(self, inputs, **tokenizer_kwargs) -> dict[str, GenericTensor]:
         return_tensors = self.framework
         if isinstance(inputs, dict):
             return self.tokenizer(**inputs, return_tensors=return_tensors, **tokenizer_kwargs)

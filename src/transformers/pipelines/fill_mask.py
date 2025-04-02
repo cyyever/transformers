@@ -1,5 +1,3 @@
-from typing import Dict
-
 import numpy as np
 
 from ..utils import add_end_docstrings, is_tf_available, is_torch_available, logging
@@ -113,7 +111,7 @@ class FillMaskPipeline(Pipeline):
 
     def preprocess(
         self, inputs, return_tensors=None, tokenizer_kwargs=None, **preprocess_parameters
-    ) -> Dict[str, GenericTensor]:
+    ) -> dict[str, GenericTensor]:
         if return_tensors is None:
             return_tensors = self.framework
         if tokenizer_kwargs is None:

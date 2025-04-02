@@ -1,4 +1,3 @@
-# coding=utf-8
 # Copyright 2018 The Google AI Language Team Authors and The HuggingFace Inc. team.
 # Copyright (c) 2018, NVIDIA CORPORATION.  All rights reserved.
 #
@@ -18,7 +17,7 @@ import copy
 import inspect
 import warnings
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 import tensorflow as tf
@@ -77,9 +76,9 @@ class TFGreedySearchDecoderOnlyOutput(ModelOutput):
     """
 
     sequences: tf.Tensor = None
-    scores: Optional[Tuple[tf.Tensor]] = None
-    attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    hidden_states: Optional[Tuple[Tuple[tf.Tensor]]] = None
+    scores: Optional[tuple[tf.Tensor]] = None
+    attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    hidden_states: Optional[tuple[tuple[tf.Tensor]]] = None
 
 
 @dataclass
@@ -116,12 +115,12 @@ class TFGreedySearchEncoderDecoderOutput(ModelOutput):
     """
 
     sequences: tf.Tensor = None
-    scores: Optional[Tuple[tf.Tensor]] = None
-    encoder_attentions: Optional[Tuple[tf.Tensor]] = None
-    encoder_hidden_states: Optional[Tuple[tf.Tensor]] = None
-    decoder_attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    cross_attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    decoder_hidden_states: Optional[Tuple[Tuple[tf.Tensor]]] = None
+    scores: Optional[tuple[tf.Tensor]] = None
+    encoder_attentions: Optional[tuple[tf.Tensor]] = None
+    encoder_hidden_states: Optional[tuple[tf.Tensor]] = None
+    decoder_attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    cross_attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    decoder_hidden_states: Optional[tuple[tuple[tf.Tensor]]] = None
 
 
 @dataclass
@@ -147,9 +146,9 @@ class TFSampleDecoderOnlyOutput(ModelOutput):
     """
 
     sequences: tf.Tensor = None
-    scores: Optional[Tuple[tf.Tensor]] = None
-    attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    hidden_states: Optional[Tuple[Tuple[tf.Tensor]]] = None
+    scores: Optional[tuple[tf.Tensor]] = None
+    attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    hidden_states: Optional[tuple[tuple[tf.Tensor]]] = None
 
 
 @dataclass
@@ -186,12 +185,12 @@ class TFSampleEncoderDecoderOutput(ModelOutput):
     """
 
     sequences: tf.Tensor = None
-    scores: Optional[Tuple[tf.Tensor]] = None
-    encoder_attentions: Optional[Tuple[tf.Tensor]] = None
-    encoder_hidden_states: Optional[Tuple[tf.Tensor]] = None
-    decoder_attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    cross_attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    decoder_hidden_states: Optional[Tuple[Tuple[tf.Tensor]]] = None
+    scores: Optional[tuple[tf.Tensor]] = None
+    encoder_attentions: Optional[tuple[tf.Tensor]] = None
+    encoder_hidden_states: Optional[tuple[tf.Tensor]] = None
+    decoder_attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    cross_attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    decoder_hidden_states: Optional[tuple[tuple[tf.Tensor]]] = None
 
 
 @dataclass
@@ -223,10 +222,10 @@ class TFBeamSearchDecoderOnlyOutput(ModelOutput):
 
     sequences: tf.Tensor = None
     sequences_scores: Optional[tf.Tensor] = None
-    scores: Optional[Tuple[tf.Tensor]] = None
+    scores: Optional[tuple[tf.Tensor]] = None
     beam_indices: Optional[tf.Tensor] = None
-    attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    hidden_states: Optional[Tuple[Tuple[tf.Tensor]]] = None
+    attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    hidden_states: Optional[tuple[tuple[tf.Tensor]]] = None
 
 
 @dataclass
@@ -270,13 +269,13 @@ class TFBeamSearchEncoderDecoderOutput(ModelOutput):
 
     sequences: tf.Tensor = None
     sequences_scores: Optional[tf.Tensor] = None
-    scores: Optional[Tuple[tf.Tensor]] = None
+    scores: Optional[tuple[tf.Tensor]] = None
     beam_indices: Optional[tf.Tensor] = None
-    encoder_attentions: Optional[Tuple[tf.Tensor]] = None
-    encoder_hidden_states: Optional[Tuple[tf.Tensor]] = None
-    decoder_attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    cross_attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    decoder_hidden_states: Optional[Tuple[Tuple[tf.Tensor]]] = None
+    encoder_attentions: Optional[tuple[tf.Tensor]] = None
+    encoder_hidden_states: Optional[tuple[tf.Tensor]] = None
+    decoder_attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    cross_attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    decoder_hidden_states: Optional[tuple[tuple[tf.Tensor]]] = None
 
 
 @dataclass
@@ -308,10 +307,10 @@ class TFBeamSampleDecoderOnlyOutput(ModelOutput):
 
     sequences: tf.Tensor = None
     sequences_scores: Optional[tf.Tensor] = None
-    scores: Optional[Tuple[tf.Tensor]] = None
+    scores: Optional[tuple[tf.Tensor]] = None
     beam_indices: Optional[tf.Tensor] = None
-    attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    hidden_states: Optional[Tuple[Tuple[tf.Tensor]]] = None
+    attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    hidden_states: Optional[tuple[tuple[tf.Tensor]]] = None
 
 
 @dataclass
@@ -354,13 +353,13 @@ class TFBeamSampleEncoderDecoderOutput(ModelOutput):
 
     sequences: tf.Tensor = None
     sequences_scores: Optional[tf.Tensor] = None
-    scores: Optional[Tuple[tf.Tensor]] = None
+    scores: Optional[tuple[tf.Tensor]] = None
     beam_indices: Optional[tf.Tensor] = None
-    encoder_attentions: Optional[Tuple[tf.Tensor]] = None
-    encoder_hidden_states: Optional[Tuple[tf.Tensor]] = None
-    decoder_attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    cross_attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    decoder_hidden_states: Optional[Tuple[Tuple[tf.Tensor]]] = None
+    encoder_attentions: Optional[tuple[tf.Tensor]] = None
+    encoder_hidden_states: Optional[tuple[tf.Tensor]] = None
+    decoder_attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    cross_attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    decoder_hidden_states: Optional[tuple[tuple[tf.Tensor]]] = None
 
 
 @dataclass
@@ -385,9 +384,9 @@ class TFContrastiveSearchDecoderOnlyOutput(ModelOutput):
     """
 
     sequences: tf.Tensor = None
-    scores: Optional[Tuple[tf.Tensor]] = None
-    attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    hidden_states: Optional[Tuple[Tuple[tf.Tensor]]] = None
+    scores: Optional[tuple[tf.Tensor]] = None
+    attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    hidden_states: Optional[tuple[tuple[tf.Tensor]]] = None
 
 
 @dataclass
@@ -423,12 +422,12 @@ class TFContrastiveSearchEncoderDecoderOutput(ModelOutput):
     """
 
     sequences: tf.Tensor = None
-    scores: Optional[Tuple[tf.Tensor]] = None
-    encoder_attentions: Optional[Tuple[tf.Tensor]] = None
-    encoder_hidden_states: Optional[Tuple[tf.Tensor]] = None
-    decoder_attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    cross_attentions: Optional[Tuple[Tuple[tf.Tensor]]] = None
-    decoder_hidden_states: Optional[Tuple[Tuple[tf.Tensor]]] = None
+    scores: Optional[tuple[tf.Tensor]] = None
+    encoder_attentions: Optional[tuple[tf.Tensor]] = None
+    encoder_hidden_states: Optional[tuple[tf.Tensor]] = None
+    decoder_attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    cross_attentions: Optional[tuple[tuple[tf.Tensor]]] = None
+    decoder_hidden_states: Optional[tuple[tuple[tf.Tensor]]] = None
 
 
 TFGreedySearchOutput = Union[TFGreedySearchEncoderDecoderOutput, TFGreedySearchDecoderOnlyOutput]
@@ -477,7 +476,7 @@ class TFGenerationMixin:
     def compute_transition_scores(
         self,
         sequences: tf.Tensor,
-        scores: Tuple[tf.Tensor],
+        scores: tuple[tf.Tensor],
         beam_indices: Optional[tf.Tensor] = None,
         normalize_logits: bool = False,
     ) -> tf.Tensor:
@@ -619,7 +618,7 @@ class TFGenerationMixin:
                 exception_message += f" Please use one of the following classes instead: {generate_compatible_classes}"
             raise TypeError(exception_message)
 
-    def _validate_model_kwargs(self, model_kwargs: Dict[str, Any]):
+    def _validate_model_kwargs(self, model_kwargs: dict[str, Any]):
         """Validates model kwargs for generation. Generate argument typos will also be caught here."""
         # Excludes arguments that are handled before calling any model function
         if self.config.is_encoder_decoder:
@@ -1044,7 +1043,7 @@ class TFGenerationMixin:
 
     def _prepare_encoder_decoder_kwargs_for_generation(
         self, inputs_tensor: tf.Tensor, model_kwargs, model_input_name: Optional[str] = None
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         # 1. get encoder and store encoder outputs
         encoder = self.get_encoder()
 
@@ -1076,10 +1075,10 @@ class TFGenerationMixin:
         self,
         batch_size: int,
         model_input_name: str,
-        model_kwargs: Dict[str, tf.Tensor],
+        model_kwargs: dict[str, tf.Tensor],
         decoder_start_token_id: Optional[int] = None,
         bos_token_id: Optional[int] = None,
-    ) -> Tuple[tf.Tensor, Dict[str, tf.Tensor]]:
+    ) -> tuple[tf.Tensor, dict[str, tf.Tensor]]:
         """Prepares `decoder_input_ids` for generation with encoder-decoder models"""
         # 1. Check whether the user has defined `decoder_input_ids` manually. To facilitate in terms of input naming,
         # we also allow the user to pass it under `input_ids`, if the encoder does not use it as the main input.
@@ -1138,7 +1137,7 @@ class TFGenerationMixin:
         input_ids: Optional[tf.Tensor] = None,
         expand_in_new_axis: bool = False,
         **model_kwargs,
-    ) -> Tuple[tf.Tensor, Dict[str, Any]]:
+    ) -> tuple[tf.Tensor, dict[str, Any]]:
         """
         Expands tensors from [batch_size, ...] to [batch_size * expand_size, ...] or [batch_size, expand_size, ...],
         depending on `expand_in_new_axis`. Beam-based approaches expect this function to be used with
@@ -1174,8 +1173,8 @@ class TFGenerationMixin:
         self,
         inputs: Optional[tf.Tensor] = None,
         bos_token_id: Optional[int] = None,
-        model_kwargs: Optional[Dict[str, tf.Tensor]] = None,
-    ) -> Tuple[tf.Tensor, Optional[str], Dict[str, tf.Tensor]]:
+        model_kwargs: Optional[dict[str, tf.Tensor]] = None,
+    ) -> tuple[tf.Tensor, Optional[str], dict[str, tf.Tensor]]:
         """
         This function extracts the model-specific `inputs` for generation.
         """
@@ -1240,7 +1239,7 @@ class TFGenerationMixin:
         self,
         inputs: Optional[tf.Tensor] = None,
         bos_token_id: Optional[int] = None,
-        model_kwargs: Optional[Dict[str, tf.Tensor]] = None,
+        model_kwargs: Optional[dict[str, tf.Tensor]] = None,
     ) -> tf.Tensor:
         """Initializes input ids for generation, if necessary."""
         if inputs is not None:
@@ -1276,8 +1275,8 @@ class TFGenerationMixin:
         return past_key_values
 
     def _update_model_kwargs_for_generation(
-        self, outputs: ModelOutput, model_kwargs: Dict[str, Any], is_encoder_decoder: bool = False
-    ) -> Dict[str, Any]:
+        self, outputs: ModelOutput, model_kwargs: dict[str, Any], is_encoder_decoder: bool = False
+    ) -> dict[str, Any]:
         # update past_key_values
         model_kwargs["past_key_values"] = self._extract_past_from_model_output(outputs)
 
@@ -1294,7 +1293,7 @@ class TFGenerationMixin:
     def _update_model_kwargs_for_xla_generation(
         self,
         model_outputs: ModelOutput,
-        model_kwargs: Dict[str, Any],
+        model_kwargs: dict[str, Any],
         cur_len: int,
         max_length: int,
         batch_size: int,
@@ -1794,7 +1793,7 @@ class TFGenerationMixin:
         max_length: Optional[int] = None,
         pad_token_id: Optional[int] = None,
         eos_token_id: Optional[int] = None,
-        seed: Optional[Tuple[int, int]] = None,
+        seed: Optional[tuple[int, int]] = None,
         output_attentions: Optional[bool] = None,
         output_hidden_states: Optional[bool] = None,
         output_scores: Optional[bool] = None,

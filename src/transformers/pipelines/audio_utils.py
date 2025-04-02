@@ -2,7 +2,7 @@
 import datetime
 import platform
 import subprocess
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 import numpy as np
 
@@ -127,15 +127,14 @@ def ffmpeg_microphone(
 
     chunk_len = int(round(sampling_rate * chunk_length_s)) * size_of_sample
     iterator = _ffmpeg_stream(ffmpeg_command, chunk_len)
-    for item in iterator:
-        yield item
+    yield from iterator
 
 
 def ffmpeg_microphone_live(
     sampling_rate: int,
     chunk_length_s: float,
     stream_chunk_s: Optional[int] = None,
-    stride_length_s: Optional[Union[Tuple[float, float], float]] = None,
+    stride_length_s: Optional[Union[tuple[float, float], float]] = None,
     format_for_conversion: str = "f32le",
     ffmpeg_input_device: Optional[str] = None,
     ffmpeg_additional_args: Optional[list[str]] = None,
@@ -226,7 +225,7 @@ def ffmpeg_microphone_live(
         yield item
 
 
-def chunk_bytes_iter(iterator, chunk_len: int, stride: Tuple[int, int], stream: bool = False):
+def chunk_bytes_iter(iterator, chunk_len: int, stride: tuple[int, int], stream: bool = False):
     """
     Reads raw bytes from an iterator and does chunks of length `chunk_len`. Optionally adds `stride` to each chunks to
     get overlaps. `stream` is used to return partial results even if a full `chunk_len` is not yet available.

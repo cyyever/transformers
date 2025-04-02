@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding=utf-8
 
 # Copyright 2024 The HuggingFace Inc. team. All rights reserved.
 #
@@ -19,7 +18,6 @@ import json
 import math
 from dataclasses import dataclass
 from math import sqrt
-from typing import Dict
 
 from huggingface_hub import hf_hub_download, list_spaces
 
@@ -90,7 +88,7 @@ BASE_PYTHON_TOOLS = {
 @dataclass
 class PreTool:
     name: str
-    inputs: Dict[str, str]
+    inputs: dict[str, str]
     output_type: type
     task: str
     description: str

@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import List, Union
+from typing import Union
 
 import numpy as np
 
@@ -85,8 +85,8 @@ class ImageToImagePipeline(Pipeline):
         return preprocess_params, forward_params, postprocess_params
 
     def __call__(
-        self, images: Union[str, List[str], "Image.Image", List["Image.Image"]], **kwargs
-    ) -> Union["Image.Image", List["Image.Image"]]:
+        self, images: Union[str, list[str], "Image.Image", list["Image.Image"]], **kwargs
+    ) -> Union["Image.Image", list["Image.Image"]]:
         """
         Transform the image(s) passed as inputs.
 

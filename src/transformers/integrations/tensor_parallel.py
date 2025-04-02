@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import re
 from functools import lru_cache, partial
-from typing import List, Optional, Tuple, Union
 
 import torch
 from torch import nn
@@ -35,7 +34,7 @@ if is_torch_greater_or_equal("2.5") and _torch_distributed_available:
     from torch.distributed.tensor import DTensor, Placement, Replicate, Shard
 
 
-def _blocks_to_block_sizes(total_size: int, blocks: Union[int, List[int]]) -> List[int]:
+def _blocks_to_block_sizes(total_size: int, blocks: int | list[int]) -> list[int]:
     """
     Convert block count or proportions to block sizes.
 
@@ -186,8 +185,8 @@ class GatherParallel(TensorParallelLayer):
     def __init__(
         self,
         *,
-        input_layouts: Optional[Placement] = None,
-        output_layouts: Optional[Placement] = None,
+        input_layouts: Placement | None = None,
+        output_layouts: Placement | None = None,
         use_local_output: bool = True,
     ):
         super().__init__()
@@ -244,8 +243,8 @@ class ColwiseParallel(TensorParallelLayer):
     def __init__(
         self,
         *,
-        input_layouts: Optional[Placement] = None,
-        output_layouts: Optional[Placement] = None,
+        input_layouts: Placement | None = None,
+        output_layouts: Placement | None = None,
         use_local_output: bool = True,
         use_dtensor=True,
     ):
@@ -332,8 +331,8 @@ class RowwiseParallel(TensorParallelLayer):
     def __init__(
         self,
         *,
-        input_layouts: Optional[Placement] = None,
-        output_layouts: Optional[Placement] = None,
+        input_layouts: Placement | None = None,
+        output_layouts: Placement | None = None,
         use_local_output: bool = True,
         use_dtensor=True,
     ):
@@ -386,7 +385,7 @@ class RowwiseParallel(TensorParallelLayer):
         if self.use_dtensor:
             if isinstance(module, nn.Linear):
                 # rowwise linear runtime sharding requires input tensor shard on last dim
-                self.desired_input_layouts: Tuple[Placement, ...] = (Shard(-1),)
+                self.desired_input_layouts: tuple[Placement, ...] = (Shard(-1),)
             elif isinstance(module, nn.Embedding):
                 # rowwise embedding runtime sharding requires input tensor replicated
                 self.desired_input_layouts = (Replicate(),)

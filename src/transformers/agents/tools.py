@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding=utf-8
 
 # Copyright 2023 The HuggingFace Inc. team. All rights reserved.
 #
@@ -24,7 +23,7 @@ import os
 import tempfile
 from functools import lru_cache, wraps
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Optional, Union
 
 from huggingface_hub import create_repo, get_collection, hf_hub_download, metadata_update, upload_folder
 from huggingface_hub.utils import RepositoryNotFoundError, build_hf_headers, get_session
@@ -75,7 +74,7 @@ def get_repo_type(repo_id, repo_type=None, **hub_kwargs):
             hf_hub_download(repo_id, TOOL_CONFIG_FILE, repo_type="model", **hub_kwargs)
             return "model"
         except RepositoryNotFoundError:
-            raise EnvironmentError(f"`{repo_id}` does not seem to be a valid repo identifier on the Hub.")
+            raise OSError(f"`{repo_id}` does not seem to be a valid repo identifier on the Hub.")
         except Exception:
             return "model"
     except Exception:
@@ -130,7 +129,7 @@ class Tool:
 
     name: str
     description: str
-    inputs: Dict[str, Dict[str, Union[str, type]]]
+    inputs: dict[str, dict[str, Union[str, type]]]
     output_type: type
 
     @_deprecate_method(
@@ -230,7 +229,7 @@ class Tool:
         # Save config file
         config_file = os.path.join(output_dir, "tool_config.json")
         if os.path.isfile(config_file):
-            with open(config_file, "r", encoding="utf-8") as f:
+            with open(config_file, encoding="utf-8") as f:
                 tool_config = json.load(f)
         else:
             tool_config = {}
@@ -323,7 +322,7 @@ class Tool:
                 _raise_exceptions_for_connection_errors=False,
             )
         if resolved_config_file is None:
-            raise EnvironmentError(
+            raise OSError(
                 f"{repo_id} does not appear to provide a valid configuration in `tool_config.json` or `config.json`."
             )
 
@@ -332,7 +331,7 @@ class Tool:
 
         if not is_tool_config:
             if "custom_tool" not in config:
-                raise EnvironmentError(
+                raise OSError(
                     f"{repo_id} does not provide a mapping to custom tools in its configuration `config.json`."
                 )
             custom_tool = config["custom_tool"]
@@ -924,8 +923,8 @@ class EndpointClient:
 
     def __call__(
         self,
-        inputs: Optional[Union[str, Dict, List[str], List[List[str]]]] = None,
-        params: Optional[Dict] = None,
+        inputs: Optional[Union[str, dict, list[str], list[list[str]]]] = None,
+        params: Optional[dict] = None,
         data: Optional[bytes] = None,
         output_image: bool = False,
     ) -> Any:

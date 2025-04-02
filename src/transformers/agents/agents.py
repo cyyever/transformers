@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding=utf-8
 
 # Copyright 2024 The HuggingFace Inc. team. All rights reserved.
 #
@@ -18,7 +17,7 @@ import json
 import logging
 import re
 import time
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Optional, Union
 
 from huggingface_hub.utils._deprecation import _deprecate_method
 
@@ -96,7 +95,7 @@ ch.setFormatter(CustomFormatter())
 logger.addHandler(ch)
 
 
-def parse_json_blob(json_blob: str) -> Dict[str, str]:
+def parse_json_blob(json_blob: str) -> dict[str, str]:
     try:
         first_accolade_index = json_blob.find("{")
         last_accolade_index = [a.start() for a in list(re.finditer("}", json_blob))][-1]
@@ -136,7 +135,7 @@ Code:
         )
 
 
-def parse_json_tool_call(json_blob: str) -> Tuple[str, Dict[str, str]]:
+def parse_json_tool_call(json_blob: str) -> tuple[str, dict[str, str]]:
     json_blob = json_blob.replace("```json", "").replace("```", "")
     tool_call = parse_json_blob(json_blob)
     if "action" in tool_call and "action_input" in tool_call:
@@ -149,7 +148,7 @@ def parse_json_tool_call(json_blob: str) -> Tuple[str, Dict[str, str]]:
         )
 
 
-def parse_text_tool_call(text: str) -> Tuple[str, Union[str, Dict[str, str]]]:
+def parse_text_tool_call(text: str) -> tuple[str, Union[str, dict[str, str]]]:
     """
     Expects a text in the format: 'Action:', 'Action input:', 'Observation:'. 'Action input:' contains a json string with input arguments.
     """
@@ -170,7 +169,7 @@ def parse_text_tool_call(text: str) -> Tuple[str, Union[str, Dict[str, str]]]:
         )
 
 
-def to_text(input: Union[List[Dict[str, str]], Dict[str, str], str]) -> str:
+def to_text(input: Union[list[dict[str, str]], dict[str, str], str]) -> str:
     if isinstance(input, list):
         return "\n".join([m["content"] for m in input])
     elif isinstance(input, dict):
@@ -195,7 +194,7 @@ class Toolbox:
             Whether to add the tools available within `transformers` to the toolbox.
     """
 
-    def __init__(self, tools: List[Tool], add_base_tools: bool = False):
+    def __init__(self, tools: list[Tool], add_base_tools: bool = False):
         self._tools = {tool.name: tool for tool in tools}
         if add_base_tools:
             self.add_base_tools()
@@ -213,7 +212,7 @@ class Toolbox:
         self._load_tools_if_needed()
 
     @property
-    def tools(self) -> Dict[str, Tool]:
+    def tools(self) -> dict[str, Tool]:
         """Get all tools currently in the toolbox"""
         return self._tools
 
@@ -347,7 +346,7 @@ def format_prompt_with_managed_agents_descriptions(prompt_template, managed_agen
         return prompt_template.replace("<<managed_agents_descriptions>>", "")
 
 
-def format_prompt_with_imports(prompt_template: str, authorized_imports: List[str]) -> str:
+def format_prompt_with_imports(prompt_template: str, authorized_imports: list[str]) -> str:
     if "<<authorized_imports>>" not in prompt_template:
         raise AgentError("Tag '<<authorized_imports>>' should be provided in the prompt.")
     return prompt_template.replace("<<authorized_imports>>", str(authorized_imports))
@@ -356,18 +355,18 @@ def format_prompt_with_imports(prompt_template: str, authorized_imports: List[st
 class Agent:
     def __init__(
         self,
-        tools: Union[List[Tool], Toolbox],
+        tools: Union[list[Tool], Toolbox],
         llm_engine: Callable = None,
         system_prompt: Optional[str] = None,
         tool_description_template: Optional[str] = None,
-        additional_args: Dict = {},
+        additional_args: dict = {},
         max_iterations: int = 6,
         tool_parser: Optional[Callable] = None,
         add_base_tools: bool = False,
         verbose: int = 0,
-        grammar: Optional[Dict[str, str]] = None,
-        managed_agents: Optional[List] = None,
-        step_callbacks: Optional[List[Callable]] = None,
+        grammar: Optional[dict[str, str]] = None,
+        managed_agents: Optional[list] = None,
+        step_callbacks: Optional[list[Callable]] = None,
         monitor_metrics: bool = True,
     ):
         if system_prompt is None:
@@ -448,7 +447,7 @@ class Agent:
         self.logger.debug("System prompt is as follows:")
         self.logger.debug(self.system_prompt)
 
-    def write_inner_memory_from_logs(self, summary_mode: Optional[bool] = False) -> List[Dict[str, str]]:
+    def write_inner_memory_from_logs(self, summary_mode: Optional[bool] = False) -> list[dict[str, str]]:
         """
         Reads past llm_outputs, actions, and observations or errors from the logs into a series of messages
         that can be used as input to the LLM.
@@ -529,7 +528,7 @@ class Agent:
             )
         return rationale.strip(), action.strip()
 
-    def execute_tool_call(self, tool_name: str, arguments: Dict[str, str]) -> Any:
+    def execute_tool_call(self, tool_name: str, arguments: dict[str, str]) -> Any:
         """
         Execute tool with the provided input and returns the result.
         This method replaces arguments with the actual values from the state if they refer to state variables.
@@ -596,12 +595,12 @@ class CodeAgent(Agent):
 
     def __init__(
         self,
-        tools: List[Tool],
+        tools: list[Tool],
         llm_engine: Optional[Callable] = None,
         system_prompt: Optional[str] = None,
         tool_description_template: Optional[str] = None,
-        grammar: Optional[Dict[str, str]] = None,
-        additional_authorized_imports: Optional[List[str]] = None,
+        grammar: Optional[dict[str, str]] = None,
+        additional_authorized_imports: Optional[list[str]] = None,
         **kwargs,
     ):
         if llm_engine is None:
@@ -728,11 +727,11 @@ class ReactAgent(Agent):
     )
     def __init__(
         self,
-        tools: List[Tool],
+        tools: list[Tool],
         llm_engine: Optional[Callable] = None,
         system_prompt: Optional[str] = None,
         tool_description_template: Optional[str] = None,
-        grammar: Optional[Dict[str, str]] = None,
+        grammar: Optional[dict[str, str]] = None,
         plan_type: Optional[str] = None,
         planning_interval: Optional[int] = None,
         **kwargs,
@@ -1000,11 +999,11 @@ class ReactJsonAgent(ReactAgent):
 
     def __init__(
         self,
-        tools: List[Tool],
+        tools: list[Tool],
         llm_engine: Optional[Callable] = None,
         system_prompt: Optional[str] = None,
         tool_description_template: Optional[str] = None,
-        grammar: Optional[Dict[str, str]] = None,
+        grammar: Optional[dict[str, str]] = None,
         planning_interval: Optional[int] = None,
         **kwargs,
     ):
@@ -1024,7 +1023,7 @@ class ReactJsonAgent(ReactAgent):
             **kwargs,
         )
 
-    def step(self, log_entry: Dict[str, Any]):
+    def step(self, log_entry: dict[str, Any]):
         """
         Perform one step in the ReAct framework: the agent thinks, acts, and observes the result.
         The errors are raised here, they are caught and logged in the run() method.
@@ -1111,12 +1110,12 @@ class ReactCodeAgent(ReactAgent):
 
     def __init__(
         self,
-        tools: List[Tool],
+        tools: list[Tool],
         llm_engine: Optional[Callable] = None,
         system_prompt: Optional[str] = None,
         tool_description_template: Optional[str] = None,
-        grammar: Optional[Dict[str, str]] = None,
-        additional_authorized_imports: Optional[List[str]] = None,
+        grammar: Optional[dict[str, str]] = None,
+        additional_authorized_imports: Optional[list[str]] = None,
         planning_interval: Optional[int] = None,
         **kwargs,
     ):
@@ -1149,7 +1148,7 @@ class ReactCodeAgent(ReactAgent):
         self.system_prompt = self.system_prompt.replace("<<authorized_imports>>", str(self.authorized_imports))
         self.custom_tools = {}
 
-    def step(self, log_entry: Dict[str, Any]):
+    def step(self, log_entry: dict[str, Any]):
         """
         Perform one step in the ReAct framework: the agent thinks, acts, and observes the result.
         The errors are raised here, they are caught and logged in the run() method.

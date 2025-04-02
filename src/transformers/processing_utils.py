@@ -23,7 +23,7 @@ import sys
 import typing
 import warnings
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, TypedDict, Union
+from typing import Any, Callable, Optional, TypedDict, Union
 
 import numpy as np
 import typing_extensions
@@ -1245,10 +1245,10 @@ class ProcessorMixin(PushToHubMixin):
 
     def _process_messages_for_chat_template(
         self,
-        conversation: List[List[Dict[str, str]]],
-        batch_images: List[ImageInput],
-        batch_videos: List[VideoInput],
-        batch_video_metadata: List[List[Dict[str, any]]],
+        conversation: list[list[dict[str, str]]],
+        batch_images: list[ImageInput],
+        batch_videos: list[VideoInput],
+        batch_video_metadata: list[list[dict[str, any]]],
         **mm_load_kwargs: Unpack[ChatTemplateLoadKwargs],
     ):
         """

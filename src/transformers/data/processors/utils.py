@@ -1,4 +1,3 @@
-# coding=utf-8
 # Copyright 2018 The Google AI Language Team Authors and The HuggingFace Inc. team.
 # Copyright (c) 2018, NVIDIA CORPORATION.  All rights reserved.
 #
@@ -18,7 +17,7 @@ import csv
 import dataclasses
 import json
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from ...utils import is_tf_available, is_torch_available, logging
 
@@ -67,9 +66,9 @@ class InputFeatures:
             float for regression problems.
     """
 
-    input_ids: List[int]
-    attention_mask: Optional[List[int]] = None
-    token_type_ids: Optional[List[int]] = None
+    input_ids: list[int]
+    attention_mask: Optional[list[int]] = None
+    token_type_ids: Optional[list[int]] = None
     label: Optional[Union[int, float]] = None
 
     def to_json_string(self):
@@ -118,7 +117,7 @@ class DataProcessor:
     @classmethod
     def _read_tsv(cls, input_file, quotechar=None):
         """Reads a tab separated value file."""
-        with open(input_file, "r", encoding="utf-8-sig") as f:
+        with open(input_file, encoding="utf-8-sig") as f:
             return list(csv.reader(f, delimiter="\t", quotechar=quotechar))
 
 

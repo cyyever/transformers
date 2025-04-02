@@ -119,7 +119,7 @@ def add_fast_image_processor_to_main_init(fast_image_processor_name: str, model_
     """
     Add the fast image processor to the main __init__.py file of the transformers package.
     """
-    with open(TRANSFORMERS_PATH / "__init__.py", "r", encoding="utf-8") as f:
+    with open(TRANSFORMERS_PATH / "__init__.py", encoding="utf-8") as f:
         content = f.read()
 
     # add _import_structure entry
@@ -138,7 +138,7 @@ def add_fast_image_processor_to_model_init(
     """
     Add the fast image processor to the __init__.py file of the model.
     """
-    with open(TRANSFORMERS_PATH / "models" / model_name / "__init__.py", "r", encoding="utf-8") as f:
+    with open(TRANSFORMERS_PATH / "models" / model_name / "__init__.py", encoding="utf-8") as f:
         content = f.read()
 
     fast_image_processing_module_file = fast_image_processing_module_file.split(os.sep)[-1].replace(".py", "")
@@ -252,7 +252,7 @@ def add_fast_image_processor_to_auto(image_processor_name: str, fast_image_proce
     """
     Add the fast image processor to the auto module.
     """
-    with open(TRANSFORMERS_PATH / "models" / "auto" / "image_processing_auto.py", "r", encoding="utf-8") as f:
+    with open(TRANSFORMERS_PATH / "models" / "auto" / "image_processing_auto.py", encoding="utf-8") as f:
         content = f.read()
 
     # get all lines containing the image processor name
@@ -270,7 +270,7 @@ def add_fast_image_processor_to_dummy(fast_image_processor_name: str):
     Add the fast image processor to the dummy torchvision objects file.
     """
     dummy_torchvision_objects_file = TRANSFORMERS_PATH / "utils" / "dummy_torchvision_objects.py"
-    with open(dummy_torchvision_objects_file, "r", encoding="utf-8") as f:
+    with open(dummy_torchvision_objects_file, encoding="utf-8") as f:
         content = f.read()
 
     # regex to find objects starting with "class " and ending with "ImageProcessorFast", including "ImageProcessorFast" in the match
@@ -318,7 +318,7 @@ def add_fast_image_processor_to_doc(fast_image_processor_name: str, model_name: 
     fast_doc_string = f"## {fast_image_processor_name}\n\n[[autodoc]] {fast_image_processor_name}\n    - preprocess"
 
     for doc_file in doc_files:
-        with open(doc_file, "r", encoding="utf-8") as f:
+        with open(doc_file, encoding="utf-8") as f:
             content = f.read()
 
         if fast_doc_string not in content:
@@ -343,7 +343,7 @@ def add_fast_image_processor_to_tests(fast_image_processor_name: str, model_name
         logger.warning(f"No test file found for {model_name}. Skipping.")
         return
 
-    with open(test_file, "r", encoding="utf-8") as f:
+    with open(test_file, encoding="utf-8") as f:
         content = f.read()
 
     # add is_torchvision_available import to the imports
@@ -603,7 +603,7 @@ def add_fast_image_processor(model_name: str):
     else:
         image_processing_module_file = str(image_processing_module_file[0])
 
-    with open(image_processing_module_file, "r", encoding="utf-8") as f:
+    with open(image_processing_module_file, encoding="utf-8") as f:
         content_base_file = f.read()
 
     # regex to find object starting with "class " and ending with "ImageProcessor", including "ImageProcessor" in the match

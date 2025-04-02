@@ -1,5 +1,3 @@
-from typing import Dict
-
 from ..utils import add_end_docstrings
 from .base import GenericTensor, Pipeline, build_pipeline_init_args
 
@@ -56,7 +54,7 @@ class FeatureExtractionPipeline(Pipeline):
 
         return preprocess_params, {}, postprocess_params
 
-    def preprocess(self, inputs, **tokenize_kwargs) -> Dict[str, GenericTensor]:
+    def preprocess(self, inputs, **tokenize_kwargs) -> dict[str, GenericTensor]:
         model_inputs = self.tokenizer(inputs, return_tensors=self.framework, **tokenize_kwargs)
         return model_inputs
 

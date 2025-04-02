@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding=utf-8
 
 # Copyright 2024 The HuggingFace Inc. team. All rights reserved.
 #
@@ -16,7 +15,7 @@
 # limitations under the License.
 from copy import deepcopy
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Optional
 
 from huggingface_hub import InferenceClient
 from huggingface_hub.utils._deprecation import _deprecate_method
@@ -41,7 +40,7 @@ class MessageRole(str, Enum):
         return [r.value for r in cls]
 
 
-def get_clean_message_list(message_list: List[Dict[str, str]], role_conversions: Dict[str, str] = {}):
+def get_clean_message_list(message_list: list[dict[str, str]], role_conversions: dict[str, str] = {}):
     """
     Subsequent messages with the same role will be concatenated to a single message.
 
@@ -97,12 +96,12 @@ class HfEngine:
         }
 
     def generate(
-        self, messages: List[Dict[str, str]], stop_sequences: Optional[List[str]] = None, grammar: Optional[str] = None
+        self, messages: list[dict[str, str]], stop_sequences: Optional[list[str]] = None, grammar: Optional[str] = None
     ):
         raise NotImplementedError
 
     def __call__(
-        self, messages: List[Dict[str, str]], stop_sequences: Optional[List[str]] = None, grammar: Optional[str] = None
+        self, messages: list[dict[str, str]], stop_sequences: Optional[list[str]] = None, grammar: Optional[str] = None
     ) -> str:
         """Process the input messages and return the model's response.
 
@@ -132,7 +131,7 @@ class HfEngine:
             "Quantum mechanics is the branch of physics that studies..."
             ```
         """
-        if not isinstance(messages, List):
+        if not isinstance(messages, list):
             raise ValueError("Messages should be a list of dictionaries with 'role' and 'content' keys.")
         if stop_sequences is None:
             stop_sequences = []
@@ -181,7 +180,7 @@ class HfApiEngine(HfEngine):
         self.max_tokens = max_tokens
 
     def generate(
-        self, messages: List[Dict[str, str]], stop_sequences: Optional[List[str]] = None, grammar: Optional[str] = None
+        self, messages: list[dict[str, str]], stop_sequences: Optional[list[str]] = None, grammar: Optional[str] = None
     ) -> str:
         # Get clean message list
         messages = get_clean_message_list(messages, role_conversions=llama_role_conversions)
@@ -207,8 +206,8 @@ class TransformersEngine(HfEngine):
 
     def generate(
         self,
-        messages: List[Dict[str, str]],
-        stop_sequences: Optional[List[str]] = None,
+        messages: list[dict[str, str]],
+        stop_sequences: Optional[list[str]] = None,
         grammar: Optional[str] = None,
         max_length: int = 1500,
     ) -> str:

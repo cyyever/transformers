@@ -1,4 +1,3 @@
-# coding=utf-8
 # Copyright 2018 The HuggingFace Inc. team.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -466,7 +465,7 @@ for task, values in SUPPORTED_TASKS.items():
 PIPELINE_REGISTRY = PipelineRegistry(supported_tasks=SUPPORTED_TASKS, task_aliases=TASK_ALIASES)
 
 
-def get_supported_tasks() -> List[str]:
+def get_supported_tasks() -> list[str]:
     """
     Returns a list of supported task strings.
     """
@@ -500,7 +499,7 @@ def get_task(model: str, token: Optional[str] = None, **deprecated_kwargs) -> st
     return task
 
 
-def check_task(task: str) -> Tuple[str, Dict, Any]:
+def check_task(task: str) -> tuple[str, dict, Any]:
     """
     Checks an incoming task string, to validate it's correct and return the default Pipeline and Model classes, and
     default models if they exist.
@@ -580,7 +579,7 @@ def pipeline(
     device_map=None,
     torch_dtype=None,
     trust_remote_code: Optional[bool] = None,
-    model_kwargs: Optional[Dict[str, Any]] = None,
+    model_kwargs: Optional[dict[str, Any]] = None,
     pipeline_class: Optional[Any] = None,
     **kwargs,
 ) -> Pipeline:
@@ -843,7 +842,7 @@ def pipeline(
             )
 
             if maybe_adapter_path is not None:
-                with open(maybe_adapter_path, "r", encoding="utf-8") as f:
+                with open(maybe_adapter_path, encoding="utf-8") as f:
                     adapter_config = json.load(f)
                     adapter_path = model
                     model = adapter_config["base_model_name_or_path"]

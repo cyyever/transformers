@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Union
 
 from ..utils import (
     add_end_docstrings,
@@ -52,7 +52,7 @@ class DepthEstimationPipeline(Pipeline):
         requires_backends(self, "vision")
         self.check_model_type(MODEL_FOR_DEPTH_ESTIMATION_MAPPING_NAMES)
 
-    def __call__(self, inputs: Union[str, List[str], "Image.Image", List["Image.Image"]] = None, **kwargs):
+    def __call__(self, inputs: Union[str, list[str], "Image.Image", list["Image.Image"]] = None, **kwargs):
         """
         Predict the depth(s) of the image(s) passed as inputs.
 

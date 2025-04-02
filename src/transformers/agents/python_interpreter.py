@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding=utf-8
 
 # Copyright 2024 The HuggingFace Inc. team. All rights reserved.
 #
@@ -19,7 +18,7 @@ import builtins
 import difflib
 from collections.abc import Mapping
 from importlib import import_module
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 
 import numpy as np
 
@@ -704,10 +703,10 @@ def evaluate_dictcomp(dictcomp, state, static_tools, custom_tools):
 
 def evaluate_ast(
     expression: ast.AST,
-    state: Dict[str, Any],
-    static_tools: Dict[str, Callable],
-    custom_tools: Dict[str, Callable],
-    authorized_imports: List[str] = LIST_SAFE_MODULES,
+    state: dict[str, Any],
+    static_tools: dict[str, Callable],
+    custom_tools: dict[str, Callable],
+    authorized_imports: list[str] = LIST_SAFE_MODULES,
 ):
     """
     Evaluate an abstract syntax tree using the content of the variables stored in a state and only evaluating a given
@@ -857,10 +856,10 @@ def truncate_print_outputs(print_outputs: str, max_len_outputs: int = MAX_LEN_OU
 
 def evaluate_python_code(
     code: str,
-    static_tools: Optional[Dict[str, Callable]] = None,
-    custom_tools: Optional[Dict[str, Callable]] = None,
-    state: Optional[Dict[str, Any]] = None,
-    authorized_imports: List[str] = LIST_SAFE_MODULES,
+    static_tools: Optional[dict[str, Callable]] = None,
+    custom_tools: Optional[dict[str, Callable]] = None,
+    state: Optional[dict[str, Any]] = None,
+    authorized_imports: list[str] = LIST_SAFE_MODULES,
 ):
     """
     Evaluate a python expression using the content of the variables stored in a state and only evaluating a given set

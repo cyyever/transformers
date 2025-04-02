@@ -26,7 +26,7 @@ Citation:
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 import torch
 
@@ -154,7 +154,7 @@ def flex_attention_forward(
     softcap: Optional[float] = None,
     head_mask: Optional[torch.Tensor] = None,
     **kwargs,
-) -> Tuple[torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor]:
     block_mask = None
     causal_mask = None
     if isinstance(attention_mask, BlockMask):
