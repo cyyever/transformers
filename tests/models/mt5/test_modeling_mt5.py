@@ -900,7 +900,7 @@ class MT5ModelTest(ModelTesterMixin, GenerationTesterMixin, PipelineTesterMixin,
             )
             # We check the state of decoder_attentions and cross_attentions just from the last step
             attn_weights = out[attn_name] if attn_name == attention_names[0] else out[attn_name][-1]
-            self.assertEqual(sum([w.sum().item() for w in attn_weights]), 0.0)
+            self.assertEqual(sum(w.sum().item() for w in attn_weights), 0.0)
 
 
 # Copied from tests.models.t5.test_modeling_t5.T5EncoderOnlyModelTester with T5->MT5
