@@ -1010,7 +1010,7 @@ def main():
                     all_start_logits.append(start_logits)
                     all_end_logits.append(end_logits)
 
-                max_len = max([x.shape[1] for x in all_start_logits])  # Get the max_length of the tensor
+                max_len = max(x.shape[1] for x in all_start_logits)  # Get the max_length of the tensor
 
                 # concatenate the numpy array
                 start_logits_concat = create_and_fill_np_array(all_start_logits, eval_dataset, max_len)
@@ -1062,7 +1062,7 @@ def main():
             all_start_logits.append(start_logits)
             all_end_logits.append(end_logits)
 
-        max_len = max([x.shape[1] for x in all_start_logits])  # Get the max_length of the tensor
+        max_len = max(x.shape[1] for x in all_start_logits)  # Get the max_length of the tensor
 
         # concatenate the numpy array
         start_logits_concat = create_and_fill_np_array(all_start_logits, eval_dataset, max_len)

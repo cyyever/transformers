@@ -1451,7 +1451,7 @@ class GenerationTesterMixin:
                 )
                 # We check the state of decoder_attentions and cross_attentions just from the last step
                 attn_weights = out[attn_name] if attn_name == attention_names[0] else out[attn_name][-1]
-                self.assertEqual(sum([w.sum().item() for w in attn_weights]), 0.0)
+                self.assertEqual(sum(w.sum().item() for w in attn_weights), 0.0)
 
     @pytest.mark.generate
     def test_left_padding_compatibility(self):

@@ -55,3 +55,7 @@ markers = [
 ]
 log_cli = 1
 log_cli_level = "WARNING"
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = "all"
+enable = ["consider-using-generator","use-a-generator"]
