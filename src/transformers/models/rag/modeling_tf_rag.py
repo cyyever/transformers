@@ -1746,7 +1746,7 @@ class TFRagSequenceForGeneration(TFRagPreTrainedModel, TFCausalLanguageModelingL
 
         # Initialize padded tensor with shape ( all_candidates , max_candidate_length ),
         # where all_candidates counted from all inputs
-        new_shape = sum([t.shape[0] for t in tensors]), max([t.shape[1] for t in tensors])
+        new_shape = sum(t.shape[0] for t in tensors), max(t.shape[1] for t in tensors)
         output = tf.fill(new_shape, pad_token_id)
 
         # Normal tensor doesn't support slice assignment, so we need tf.Variable

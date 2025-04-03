@@ -209,7 +209,7 @@ class DisjunctiveTrie:
         r"""
         A helper class that builds a trie with the words represented in `nested_token_ids`.
         """
-        self.max_height = max([len(one) for one in nested_token_ids])
+        self.max_height = max(len(one) for one in nested_token_ids)
 
         root = {}
         for token_ids in nested_token_ids:
@@ -251,7 +251,7 @@ class DisjunctiveTrie:
         if len(next_nodes) == 0:
             return 1
         else:
-            return sum([self.count_leaves(nn) for nn in next_nodes])
+            return sum(self.count_leaves(nn) for nn in next_nodes)
 
     def has_subsets(self, trie, nested_token_ids):
         """
@@ -364,7 +364,7 @@ class ConstraintListState:
         self.constraints = constraints
 
         # max # of steps required to fulfill a given constraint
-        self.max_seqlen = max([c.seqlen for c in constraints])
+        self.max_seqlen = max(c.seqlen for c in constraints)
         self.n_constraints = len(constraints)
         self.completed = False
 

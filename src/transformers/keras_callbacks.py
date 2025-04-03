@@ -147,8 +147,8 @@ class KerasMetricCallback(keras.callbacks.Callback):
             return np.concatenate(batches, axis=0)
 
         # Welp, they're not the same length. Let's do some padding
-        max_len = max([batch.shape[1] for batch in batches])
-        num_samples = sum([batch.shape[0] for batch in batches])
+        max_len = max(batch.shape[1] for batch in batches)
+        num_samples = sum(batch.shape[0] for batch in batches)
         output = np.full_like(
             batches[0], fill_value=padding_index, shape=[num_samples, max_len] + list(batches[0].shape[2:])
         )

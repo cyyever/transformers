@@ -1908,9 +1908,7 @@ class TFLEDEncoder(keras.layers.Layer):
         # undo padding
         if output_attentions:
             all_attentions = (
-                tuple([state[:, :, :-padding_len, :] for state in all_attentions])
-                if padding_len > 0
-                else all_attentions
+                tuple(state[:, :, :-padding_len, :] for state in all_attentions) if padding_len > 0 else all_attentions
             )
 
         if output_hidden_states:

@@ -56,7 +56,7 @@ def load_tf_weights_in_openai_gpt(model, config, openai_checkpoint_folder_path):
         names = json.load(names_handle)
     with open(openai_checkpoint_folder_path + "/params_shapes.json", "r", encoding="utf-8") as shapes_handle:
         shapes = json.load(shapes_handle)
-    offsets = np.cumsum([np.prod(shape) for shape in shapes])
+    offsets = np.cumsum(np.prod(shape) for shape in shapes)
     init_params = [np.load(openai_checkpoint_folder_path + f"/params_{n}.npy") for n in range(10)]
     init_params = np.split(np.concatenate(init_params, 0), offsets)[:-1]
     init_params = [param.reshape(shape) for param, shape in zip(init_params, shapes)]
