@@ -390,5 +390,5 @@ class MegatronBertModelIntegrationTests(unittest.TestCase):
             for jj in range(3):
                 a = output[0, ii, jj]
                 b = expected[3 * ii + jj]
-                msg = "ii={} jj={} a={} b={}".format(ii, jj, a, b)
+                msg = f"ii={ii} jj={jj} a={a} b={b}"
                 self.assertTrue(math.isclose(a, b, rel_tol=TOLERANCE, abs_tol=TOLERANCE), msg=msg)
