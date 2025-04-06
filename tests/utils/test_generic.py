@@ -332,7 +332,7 @@ class ValidationDecoratorTester(unittest.TestCase):
             func1(1, extra_arg=2)
 
         @filter_out_non_signature_kwargs(extra=["extra_arg"])
-        def func2(a, **kwargs):
+        def func2(_, **kwargs):
             return kwargs
 
         with self.assertWarns(UserWarning):
@@ -340,7 +340,7 @@ class ValidationDecoratorTester(unittest.TestCase):
         self.assertEqual(kwargs, {"extra_arg": 2})
 
         @filter_out_non_signature_kwargs(extra=["extra_arg", "extra_arg2"])
-        def func3(a, **kwargs):
+        def func3(_, **kwargs):
             return kwargs
 
         with self.assertWarns(UserWarning):
