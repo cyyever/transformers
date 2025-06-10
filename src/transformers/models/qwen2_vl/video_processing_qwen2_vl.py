@@ -19,7 +19,7 @@
 # limitations under the License.
 """video processor class for Qwen2-VL."""
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from ...image_processing_utils import (
     BatchFeature,
@@ -111,7 +111,7 @@ class Qwen2VLVideoProcessor(BaseVideoProcessor):
 
     def _preprocess(
         self,
-        videos: List["torch.Tensor"],
+        videos: list["torch.Tensor"],
         do_convert_rgb: bool,
         do_resize: bool,
         size: SizeDict,
@@ -119,8 +119,8 @@ class Qwen2VLVideoProcessor(BaseVideoProcessor):
         do_rescale: bool,
         rescale_factor: float,
         do_normalize: bool,
-        image_mean: Optional[Union[float, List[float]]],
-        image_std: Optional[Union[float, List[float]]],
+        image_mean: Optional[Union[float, list[float]]],
+        image_std: Optional[Union[float, list[float]]],
         min_pixels: Optional[int] = None,
         max_pixels: Optional[int] = None,
         patch_size: Optional[int] = None,

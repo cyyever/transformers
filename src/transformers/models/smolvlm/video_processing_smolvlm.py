@@ -14,7 +14,7 @@
 # limitations under the License.
 
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np
 
@@ -128,7 +128,7 @@ def smolvlm_sample_indices_fn(metadata, max_frames, target_fps, skip_secs=0):
     return indices
 
 
-def get_max_height_width(videos: list["torch.Tensor"]) -> List[int]:
+def get_max_height_width(videos: list["torch.Tensor"]) -> list[int]:
     """
     Get the maximum height and width across all videos in a batch.
     """
@@ -253,7 +253,7 @@ class SmolVLMVideoProcessor(BaseVideoProcessor):
         Args:
             video (`torch.Tensor`):
                 Video to pad.
-            padded_size (`Tuple[int, int]`):
+            padded_size (`tuple[int, int]`):
                 Height and width to pad.
             fill (`int`, *optional*):
                 The value to use for the padding.
@@ -282,7 +282,7 @@ class SmolVLMVideoProcessor(BaseVideoProcessor):
 
     def _preprocess(
         self,
-        videos: List["torch.Tensor"],
+        videos: list["torch.Tensor"],
         do_convert_rgb: bool,
         do_resize: bool,
         size: SizeDict,
@@ -291,8 +291,8 @@ class SmolVLMVideoProcessor(BaseVideoProcessor):
         rescale_factor: float,
         do_normalize: bool,
         do_pad: bool,
-        image_mean: Optional[Union[float, List[float]]],
-        image_std: Optional[Union[float, List[float]]],
+        image_mean: Optional[Union[float, list[float]]],
+        image_std: Optional[Union[float, list[float]]],
         return_tensors: Optional[Union[str, TensorType]] = None,
         **kwargs,
     ):
