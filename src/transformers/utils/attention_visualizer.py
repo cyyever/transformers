@@ -118,7 +118,7 @@ def generate_attention_matrix_from_mask(
         colored_word = f"{YELLOW}{word_repr}{RESET}" if img_token in word else word_repr
         row_display = " ".join(
             f"{YELLOW}{BLACK_SQUARE}{RESET}"
-            if img_token in words[j] and mask[i, j] and img_token in words[i]
+            if img_token in words[j] and mask[i, j] and img_token in word
             else f"{GREEN}{BLACK_SQUARE}{RESET}"
             if i == j
             else BLACK_SQUARE
@@ -131,7 +131,7 @@ def generate_attention_matrix_from_mask(
             sliding_window_row = " ".join(
                 f"{YELLOW}{BLACK_SQUARE}{RESET}"
                 if img_token in words[j]
-                and img_token in words[i]
+                and img_token in word
                 and token_type_buckets[0, i] == token_type_buckets[0, j]
                 else f"{GREEN}{BLACK_SQUARE}{RESET}"
                 if i == j
