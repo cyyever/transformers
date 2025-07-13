@@ -1376,7 +1376,7 @@ class TokenizerTesterMixin:
 
                 for i, conv in enumerate(conversations):
                     chat_string = tokenizer_r.apply_chat_template(
-                        conversations[i], tokenize=False, chat_template=dummy_template
+                        conv, tokenize=False, chat_template=dummy_template
                     )
                     assistant_start = output.char_to_token(i, chat_string.index(assistant_prefix_suffix[i][0][0]))
                     assistant_end = output.char_to_token(
