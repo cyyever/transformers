@@ -222,7 +222,7 @@ def _get_unpad_data(attention_mask: torch.Tensor) -> tuple[torch.Tensor, torch.T
             Maximum sequence length in batch.
     """
     seqlens_in_batch = attention_mask.sum(dim=-1, dtype=torch.int32)
-    indices = torch.nonzero(attention_mask.flatten(), as_tuple=False).flatten()
+    indices = torch.nonzero(attention_mask, as_tuple=False).view(-1)
     # NOTE: Similar to the `.item()` in prepare_fa2_from_position_ids, with torch compile,
     # this might cause a graph break
     max_seqlen_in_batch = seqlens_in_batch.max().item()
