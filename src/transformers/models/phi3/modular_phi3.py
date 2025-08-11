@@ -264,7 +264,6 @@ class Phi3ForTokenClassification(MistralForTokenClassification):
 
 __all__ = [
     "Phi3PreTrainedModel",
-    "Phi3Model",  # noqa: F822
     "Phi3ForCausalLM",
     "Phi3ForSequenceClassification",
     "Phi3ForTokenClassification",
