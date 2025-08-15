@@ -607,7 +607,7 @@ class TFVisionEncoderDecoderModel(TFPreTrainedModel, TFCausalLanguageModelingLos
             if use_cache:
                 past_key_values = decoder_outputs[1]
             # The starting index of the remaining elements in `decoder_outputs`
-            start_index = sum([1 if x is not None else 0 for x in (loss, logits, past_key_values)])
+            start_index = sum(1 if x is not None else 0 for x in (loss, logits, past_key_values))
 
             if not isinstance(encoder_outputs, tuple):
                 encoder_outputs = encoder_outputs.to_tuple()
