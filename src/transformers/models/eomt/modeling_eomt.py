@@ -677,7 +677,7 @@ class EomtEmbeddings(nn.Module):
     """
 
     def __init__(self, config: EomtConfig) -> None:
-        super().__init__()
+        nn.Module.__init__(self)
 
         self.config = config
         self.patch_size = config.patch_size
@@ -1037,7 +1037,7 @@ class EomtForUniversalSegmentation(EomtPreTrainedModel):
     main_input_name = "pixel_values"
 
     def __init__(self, config: EomtConfig) -> None:
-        super().__init__(config)
+        nn.Module.__init__(self)
         self.config = config
         self.num_hidden_layers = config.num_hidden_layers
         self.embeddings = EomtEmbeddings(config)

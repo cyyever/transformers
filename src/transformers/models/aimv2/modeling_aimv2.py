@@ -633,7 +633,7 @@ class Aimv2Model(Aimv2PreTrainedModel):
     _supports_flash_attn = True
 
     def __init__(self, config: Aimv2Config):
-        super().__init__(config)
+        nn.Module.__init__(self)
 
         self.projection_dim = config.projection_dim
         self.vision_embed_dim = config.vision_config.hidden_size

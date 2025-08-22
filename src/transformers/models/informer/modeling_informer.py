@@ -1322,7 +1322,7 @@ class InformerDecoder(InformerPreTrainedModel):
 @auto_docstring
 class InformerModel(InformerPreTrainedModel):
     def __init__(self, config: InformerConfig):
-        super().__init__(config)
+        nn.Module.__init__(self)
 
         if config.scaling == "mean" or config.scaling is True:
             self.scaler = InformerMeanScaler(config)
@@ -1718,7 +1718,7 @@ def nll(input: torch.distributions.Distribution, target: torch.Tensor) -> torch.
 @auto_docstring
 class InformerForPrediction(InformerPreTrainedModel):
     def __init__(self, config: InformerConfig):
-        super().__init__(config)
+        nn.Module.__init__(self)
 
         self.model = InformerModel(config)
         if config.distribution_output == "student_t":
