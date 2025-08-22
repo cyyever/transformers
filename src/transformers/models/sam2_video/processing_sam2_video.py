@@ -60,9 +60,10 @@ class Sam2VideoProcessor(ProcessorMixin):
     def __init__(
         self, image_processor, video_processor, target_size: Optional[int] = None, point_pad_value: int = -10, **kwargs
     ):
-        super().__init__(image_processor, video_processor, **kwargs)
+        super().__init__(image_processor, **kwargs)
         self.point_pad_value = point_pad_value
         self.target_size = target_size if target_size is not None else self.image_processor.size["height"]
+        self.video_processor = video_processor
 
     def __call__(
         self,

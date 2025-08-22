@@ -380,7 +380,7 @@ class GPTNeoXPreTrainedModel(PreTrainedModel):
 @auto_docstring
 class GPTNeoXModel(GPTNeoXPreTrainedModel):
     def __init__(self, config):
-        super().__init__(config)
+        nn.Module.__init__(self)
         self.config = config
 
         self.embed_in = nn.Embedding(config.vocab_size, config.hidden_size)

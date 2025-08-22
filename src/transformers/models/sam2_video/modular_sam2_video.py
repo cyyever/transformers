@@ -637,7 +637,8 @@ class Sam2VideoProcessor(Sam2Processor):
     def __init__(
         self, image_processor, video_processor, target_size: Optional[int] = None, point_pad_value: int = -10, **kwargs
     ):
-        Sam2Processor().__init__(image_processor, video_processor, **kwargs)
+        super().__init__(image_processor=image_processor, target_size=target_size, **kwargs)
+        self.video_processor = video_processor
         self.point_pad_value = point_pad_value
         self.target_size = target_size if target_size is not None else self.image_processor.size["height"]
 
