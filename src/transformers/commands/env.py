@@ -37,10 +37,6 @@ from ..utils import (
 from . import BaseTransformersCLICommand
 
 
-def info_command_factory(_):
-    return EnvironmentCommand()
-
-
 def download_command_factory(args):
     return EnvironmentCommand(args.accelerate_config_file)
 
@@ -49,7 +45,6 @@ class EnvironmentCommand(BaseTransformersCLICommand):
     @staticmethod
     def register_subcommand(parser: ArgumentParser):
         download_parser = parser.add_parser("env")
-        download_parser.set_defaults(func=info_command_factory)
         download_parser.add_argument(
             "--accelerate-config_file",
             default=None,
