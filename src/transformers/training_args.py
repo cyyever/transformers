@@ -1228,7 +1228,7 @@ class TrainingArguments:
             )
         },
     )
-    fsdp: Optional[Union[list[FSDPOption], str]] = field(
+    fsdp: Union[list[FSDPOption], str] = field(
         default="",
         metadata={
             "help": (
@@ -1947,11 +1947,12 @@ class TrainingArguments:
             with open(self.fsdp_config, encoding="utf-8") as f:
                 self.fsdp_config = json.load(f)
 
-        if self.fsdp_config is not None and isinstance(self.fsdp_config, dict):
+        if isinstance(self.fsdp_config, dict):
             for k in list(self.fsdp_config.keys()):
                 if k.startswith("fsdp_"):
                     v = self.fsdp_config.pop(k)
                     self.fsdp_config[k[5:]] = v
+        assert isinstance(self.fsdp_config, dict)
 
         if self.fsdp_min_num_params > 0:
             warnings.warn("using `--fsdp_min_num_params` is deprecated. Use fsdp_config instead ", FutureWarning)
