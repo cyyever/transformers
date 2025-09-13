@@ -231,10 +231,10 @@ class BatchEncoding(UserDict):
     ):
         super().__init__(data)
 
-        if has_encoding_fast and isinstance(encoding, EncodingFast):
+        if encoding is not None and isinstance(encoding, EncodingFast):
             encoding = [encoding]
 
-        self._encodings = encoding
+        self._encodings: Optional[Sequence[EncodingFast]] = encoding
 
         if n_sequences is None and encoding is not None and encoding:
             n_sequences = encoding[0].n_sequences
