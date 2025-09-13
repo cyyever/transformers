@@ -47,15 +47,10 @@ from .utils import (
     copy_func,
     download_url,
     extract_commit_hash,
-    is_flax_available,
-    is_jax_tensor,
-    is_mlx_available,
     is_numpy_array,
     is_offline_mode,
     is_protobuf_available,
     is_remote_url,
-    is_tf_available,
-    is_tf_tensor,
     is_tokenizers_available,
     is_torch_available,
     is_torch_device,
@@ -72,10 +67,6 @@ from .utils.import_utils import PROTOBUF_IMPORT_ERROR
 if TYPE_CHECKING:
     if is_torch_available():
         import torch
-    if is_tf_available():
-        import tensorflow as tf
-    if is_flax_available():
-        import jax.numpy as jnp  # noqa: F401
 
 
 def import_protobuf_decode_error(error_message=""):
@@ -146,7 +137,7 @@ PreTokenizedInputPair = tuple[list[str], list[str]]
 EncodedInputPair = tuple[list[int], list[int]]
 
 # Define type aliases for text-related non-text modalities
-AudioInput = Union["np.ndarray", "torch.Tensor", list["np.ndarray"], list["torch.Tensor"]]
+AudioInput = Union[np.ndarray, "torch.Tensor", list[np.ndarray], list["torch.Tensor"]]
 
 # Slow tokenizers used to be saved in three separated files
 SPECIAL_TOKENS_MAP_FILE = "special_tokens_map.json"
@@ -226,7 +217,7 @@ class BatchEncoding(UserDict):
 
     def __init__(
         self,
-        data: Optional[dict[str, Any]] = None,
+        data: Optional[Union[dict[str, Any], "BatchEncoding"]] = None,
         encoding: Optional[Union[EncodingFast, Sequence[EncodingFast]]] = None,
         tensor_type: Union[None, str, TensorType] = None,
         prepend_batch_axis: bool = False,
@@ -235,10 +226,13 @@ class BatchEncoding(UserDict):
         super().__init__(data)
 
         # If encoding is not None, the fast tokenization is used
-        if encoding is not None and isinstance(encoding, EncodingFast):
-            encoding = [encoding]
+        if encoding is not None:
+            if isinstance(encoding, EncodingFast):
+                encoding = [encoding]
+            else:
+                encoding = list(encoding)
 
-        self._encodings = encoding
+        self._encodings: Optional[list[EncodingFast]] = encoding
 
         if n_sequences is None and encoding is not None and encoding:
             n_sequences = encoding[0].n_sequences
@@ -715,21 +709,7 @@ class BatchEncoding(UserDict):
             tensor_type = TensorType(tensor_type)
 
         # Get a function reference for the correct framework
-        if tensor_type == TensorType.TENSORFLOW:
-            if not is_tf_available():
-                raise ImportError(
-                    "Unable to convert output to TensorFlow tensors format, TensorFlow is not installed."
-                )
-            import tensorflow as tf
-
-            def as_tensor(value, dtype=None):
-                if len(flatten(value)) == 0 and dtype is None:
-                    dtype = tf.int32
-                return tf.constant(value, dtype=dtype)
-
-            is_tensor = tf.is_tensor
-
-        elif tensor_type == TensorType.PYTORCH:
+        if tensor_type == TensorType.PYTORCH:
             if not is_torch_available():
                 raise ImportError("Unable to convert output to PyTorch tensors format, PyTorch is not installed.")
             import torch
@@ -743,30 +723,6 @@ class BatchEncoding(UserDict):
 
             is_tensor = torch.is_tensor
 
-        elif tensor_type == TensorType.JAX:
-            if not is_flax_available():
-                raise ImportError("Unable to convert output to JAX tensors format, JAX is not installed.")
-            import jax.numpy as jnp  # noqa: F811
-
-            def as_tensor(value, dtype=None):
-                if len(flatten(value)) == 0 and dtype is None:
-                    dtype = jnp.int32
-                return jnp.array(value, dtype=dtype)
-
-            is_tensor = is_jax_tensor
-
-        elif tensor_type == TensorType.MLX:
-            if not is_mlx_available():
-                raise ImportError("Unable to convert output to MLX tensors format, MLX is not installed.")
-            import mlx.core as mx
-
-            def as_tensor(value, dtype=None):
-                if len(flatten(value)) == 0 and dtype is None:
-                    dtype = mx.int32
-                return mx.array(value, dtype=dtype)
-
-            def is_tensor(obj):
-                return isinstance(obj, mx.array)
         else:
 
             def as_tensor(value, dtype=None):
@@ -1063,12 +1019,12 @@ class SpecialTokensMixin:
         if not new_tokens:
             return 0
 
-        if not isinstance(new_tokens, (list, tuple)):
+        if isinstance(new_tokens, str) or not isinstance(new_tokens, Sequence):
             new_tokens = [new_tokens]
 
         return self._add_tokens(new_tokens, special_tokens=special_tokens)
 
-    def _add_tokens(self, new_tokens: Union[list[str], list[AddedToken]], special_tokens: bool = False) -> int:
+    def _add_tokens(self, new_tokens: Sequence[Union[str, AddedToken]], special_tokens: bool = False) -> int:
         raise NotImplementedError
 
     @property
@@ -1199,7 +1155,7 @@ class SpecialTokensMixin:
         all_ids = self.convert_tokens_to_ids(all_toks)
         return all_ids
 
-    def _set_model_specific_special_tokens(self, special_tokens: list[str]):
+    def _set_model_specific_special_tokens(self, special_tokens: dict[str, Union[str, AddedToken]]):
         """
         Adds new special tokens to the "SPECIAL_TOKENS_ATTRIBUTES" list which will be part
         of "self.special_tokens" and saved as a special token in tokenizer's config.
@@ -1485,7 +1441,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
         return self.model_max_length - self.num_special_tokens_to_add(pair=True)
 
     @max_len_single_sentence.setter
-    def max_len_single_sentence(self, value) -> int:
+    def max_len_single_sentence(self, value) -> None:
         # For backward compatibility, allow to try to setup 'max_len_single_sentence'.
         if value == self.model_max_length - self.num_special_tokens_to_add(pair=False) and self.verbose:
             if not self.deprecation_warnings.get("max_len_single_sentence", False):
@@ -1499,7 +1455,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
             )
 
     @max_len_sentences_pair.setter
-    def max_len_sentences_pair(self, value) -> int:
+    def max_len_sentences_pair(self, value) -> None:
         # For backward compatibility, allow to try to setup 'max_len_sentences_pair'.
         if value == self.model_max_length - self.num_special_tokens_to_add(pair=True) and self.verbose:
             if not self.deprecation_warnings.get("max_len_sentences_pair", False):
@@ -1778,7 +1734,9 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
                 return tokens[i:]
         return tokens[min_len:]
 
-    def get_chat_template(self, chat_template: Optional[str] = None, tools: Optional[list[dict]] = None) -> str:
+    def get_chat_template(
+        self, chat_template: Optional[str] = None, tools: Optional[list[Union[dict, Callable]]] = None
+    ) -> str:
         """
         Retrieve the chat template string used for tokenizing chat messages. This template is used
         internally by the `apply_chat_template` method and can also be used externally to retrieve the model's chat
@@ -2414,7 +2372,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
             save_directory, (filename_prefix + "-" if filename_prefix else "") + CHAT_TEMPLATE_DIR
         )
 
-        saved_raw_chat_template_files = []
+        saved_raw_chat_template_files: list[str] = []
         if save_jinja_files and isinstance(self.chat_template, str):
             # New format for single templates is to save them as chat_template.jinja
             with open(chat_template_file, "w", encoding="utf-8") as f:
@@ -2457,7 +2415,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
         filename_prefix: Optional[str] = None,
         push_to_hub: bool = False,
         **kwargs,
-    ) -> tuple[str]:
+    ) -> tuple[str, ...]:
         """
         Save the full tokenizer state.
 
@@ -2508,7 +2466,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
 
         if os.path.isfile(save_directory):
             logger.error(f"Provided path ({save_directory}) should be a directory, not a file")
-            return
+            return ()
 
         os.makedirs(save_directory, exist_ok=True)
 
@@ -2622,10 +2580,10 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
     def _save_pretrained(
         self,
         save_directory: Union[str, os.PathLike],
-        file_names: tuple[str],
+        file_names: tuple[str, ...],
         legacy_format: Optional[bool] = None,
         filename_prefix: Optional[str] = None,
-    ) -> tuple[str]:
+    ) -> tuple[str, ...]:
         """
         Save a tokenizer using the slow-tokenizer/legacy format: vocabulary + added tokens.
 
@@ -2654,7 +2612,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
 
         return file_names + vocab_files + (added_tokens_file,)
 
-    def save_vocabulary(self, save_directory: str, filename_prefix: Optional[str] = None) -> tuple[str]:
+    def save_vocabulary(self, save_directory: str, filename_prefix: Optional[str] = None) -> tuple[str, ...]:
         """
         Save only the vocabulary of the tokenizer (vocabulary + added tokens).
 
@@ -2749,7 +2707,13 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
         raise NotImplementedError
 
     def _get_padding_truncation_strategies(
-        self, padding=False, truncation=None, max_length=None, pad_to_multiple_of=None, verbose=True, **kwargs
+        self,
+        padding: Union[bool, str, PaddingStrategy] = False,
+        truncation: Optional[Union[bool, str, TruncationStrategy]] = None,
+        max_length: Optional[int] = None,
+        pad_to_multiple_of: Optional[int] = None,
+        verbose: bool = True,
+        **kwargs,
     ):
         """
         Find the correct padding/truncation strategy
@@ -3072,7 +3036,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
     @add_end_docstrings(ENCODE_KWARGS_DOCSTRING, ENCODE_PLUS_ADDITIONAL_KWARGS_DOCSTRING)
     def encode_plus(
         self,
-        text: Union[TextInput, PreTokenizedInput, EncodedInput],
+        text: Union[TextInput, PreTokenizedInput, list[TextInput], list[PreTokenizedInput]],
         text_pair: Optional[Union[TextInput, PreTokenizedInput, EncodedInput]] = None,
         add_special_tokens: bool = True,
         padding: Union[bool, str, PaddingStrategy] = False,
@@ -3146,7 +3110,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
 
     def _encode_plus(
         self,
-        text: Union[TextInput, PreTokenizedInput, EncodedInput],
+        text: Union[TextInput, PreTokenizedInput, list[TextInput], list[PreTokenizedInput]],
         text_pair: Optional[Union[TextInput, PreTokenizedInput, EncodedInput]] = None,
         add_special_tokens: bool = True,
         padding_strategy: PaddingStrategy = PaddingStrategy.DO_NOT_PAD,
@@ -3397,9 +3361,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
                     break
         # At this state, if `first_element` is still a list/tuple, it's an empty one so there is nothing to do.
         if not isinstance(first_element, (int, list, tuple)):
-            if is_tf_tensor(first_element):
-                return_tensors = "tf" if return_tensors is None else return_tensors
-            elif is_torch_tensor(first_element):
+            if is_torch_tensor(first_element):
                 return_tensors = "pt" if return_tensors is None else return_tensors
             elif isinstance(first_element, np.ndarray):
                 return_tensors = "np" if return_tensors is None else return_tensors
@@ -3646,7 +3608,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
         num_tokens_to_remove: int = 0,
         truncation_strategy: Union[str, TruncationStrategy] = "longest_first",
         stride: int = 0,
-    ) -> tuple[list[int], list[int], list[int]]:
+    ) -> tuple[list[int], Optional[list[int]], list[int]]:
         """
         Truncates a sequence pair in-place following the strategy.
 
@@ -3679,7 +3641,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
                 sequence returned. The value of this argument defines the number of additional tokens.
 
         Returns:
-            `tuple[list[int], list[int], list[int]]`: The truncated `ids`, the truncated `pair_ids` and the list of
+            `tuple[list[int], list[int] | None, list[int]]`: The truncated `ids`, the truncated `pair_ids` and the list of
             overflowing tokens. Note: The *longest_first* strategy returns empty list of overflowing tokens if a pair
             of sequences (or a batch of pairs) is provided.
         """
@@ -3860,7 +3822,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
 
     def batch_decode(
         self,
-        sequences: Union[list[int], list[list[int]], "np.ndarray", "torch.Tensor", "tf.Tensor"],
+        sequences: Union[list[int], list[list[int]], np.ndarray, "torch.Tensor"],
         skip_special_tokens: bool = False,
         clean_up_tokenization_spaces: Optional[bool] = None,
         **kwargs,
@@ -3894,7 +3856,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
 
     def decode(
         self,
-        token_ids: Union[int, list[int], "np.ndarray", "torch.Tensor", "tf.Tensor"],
+        token_ids: Union[int, list[int], np.ndarray, "torch.Tensor"],
         skip_special_tokens: bool = False,
         clean_up_tokenization_spaces: Optional[bool] = None,
         **kwargs,
