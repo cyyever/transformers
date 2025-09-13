@@ -72,10 +72,6 @@ from .utils.import_utils import PROTOBUF_IMPORT_ERROR
 if TYPE_CHECKING:
     if is_torch_available():
         import torch
-    if is_tf_available():
-        import tensorflow as tf
-    if is_flax_available():
-        import jax.numpy as jnp  # noqa: F401
 
 
 def import_protobuf_decode_error(error_message=""):
@@ -99,7 +95,7 @@ def flatten(arr: list):
 
 
 has_encoding_fast = False
-if is_tokenizers_available():
+if is_tokenizers_available() or TYPE_CHECKING:
     from tokenizers import AddedToken
     from tokenizers import Encoding as EncodingFast
 
@@ -227,7 +223,7 @@ class BatchEncoding(UserDict):
 
     def __init__(
         self,
-        data: Optional[dict[str, Any]] = None,
+        data: Optional[Union[dict[str, Any], "BatchEncoding"]] = None,
         encoding: Optional[Union[EncodingFast, Sequence[EncodingFast]]] = None,
         tensor_type: Union[None, str, TensorType] = None,
         prepend_batch_axis: bool = False,
@@ -1063,12 +1059,12 @@ class SpecialTokensMixin:
         if not new_tokens:
             return 0
 
-        if not isinstance(new_tokens, (list, tuple)):
+        if isinstance(new_tokens, str) or not isinstance(new_tokens, Sequence):
             new_tokens = [new_tokens]
 
         return self._add_tokens(new_tokens, special_tokens=special_tokens)
 
-    def _add_tokens(self, new_tokens: Union[list[str], list[AddedToken]], special_tokens: bool = False) -> int:
+    def _add_tokens(self, new_tokens: Sequence[Union[str, AddedToken]], special_tokens: bool = False) -> int:
         raise NotImplementedError
 
     @property
@@ -3866,7 +3862,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
 
     def batch_decode(
         self,
-        sequences: Union[list[int], list[list[int]], "np.ndarray", "torch.Tensor", "tf.Tensor"],
+        sequences: Union[list[int], list[list[int]], "np.ndarray", "torch.Tensor"],
         skip_special_tokens: bool = False,
         clean_up_tokenization_spaces: Optional[bool] = None,
         **kwargs,
@@ -3900,7 +3896,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
 
     def decode(
         self,
-        token_ids: Union[int, list[int], "np.ndarray", "torch.Tensor", "tf.Tensor"],
+        token_ids: Union[int, list[int], "np.ndarray", "torch.Tensor"],
         skip_special_tokens: bool = False,
         clean_up_tokenization_spaces: Optional[bool] = None,
         **kwargs,
