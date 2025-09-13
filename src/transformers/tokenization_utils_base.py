@@ -2417,7 +2417,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
             save_directory, (filename_prefix + "-" if filename_prefix else "") + CHAT_TEMPLATE_DIR
         )
 
-        saved_raw_chat_template_files = []
+        saved_raw_chat_template_files: list[str] = []
         if save_jinja_files and isinstance(self.chat_template, str):
             # New format for single templates is to save them as chat_template.jinja
             with open(chat_template_file, "w", encoding="utf-8") as f:
@@ -2460,7 +2460,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
         filename_prefix: Optional[str] = None,
         push_to_hub: bool = False,
         **kwargs,
-    ) -> tuple[str]:
+    ) -> tuple[str, ...]:
         """
         Save the full tokenizer state.
 
@@ -2625,10 +2625,10 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
     def _save_pretrained(
         self,
         save_directory: Union[str, os.PathLike],
-        file_names: tuple[str],
+        file_names: tuple[str, ...],
         legacy_format: Optional[bool] = None,
         filename_prefix: Optional[str] = None,
-    ) -> tuple[str]:
+    ) -> tuple[str, ...]:
         """
         Save a tokenizer using the slow-tokenizer/legacy format: vocabulary + added tokens.
 
@@ -2657,7 +2657,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
 
         return file_names + vocab_files + (added_tokens_file,)
 
-    def save_vocabulary(self, save_directory: str, filename_prefix: Optional[str] = None) -> tuple[str]:
+    def save_vocabulary(self, save_directory: str, filename_prefix: Optional[str] = None) -> tuple[str, ...]:
         """
         Save only the vocabulary of the tokenizer (vocabulary + added tokens).
 
@@ -2752,7 +2752,13 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
         raise NotImplementedError
 
     def _get_padding_truncation_strategies(
-        self, padding=False, truncation=None, max_length=None, pad_to_multiple_of=None, verbose=True, **kwargs
+        self,
+        padding: Union[bool, str, PaddingStrategy] = False,
+        truncation: Optional[Union[bool, str, TruncationStrategy]] = None,
+        max_length: Optional[int] = None,
+        pad_to_multiple_of: Optional[int] = None,
+        verbose: bool = True,
+        **kwargs,
     ):
         """
         Find the correct padding/truncation strategy
@@ -3075,7 +3081,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
     @add_end_docstrings(ENCODE_KWARGS_DOCSTRING, ENCODE_PLUS_ADDITIONAL_KWARGS_DOCSTRING)
     def encode_plus(
         self,
-        text: Union[TextInput, PreTokenizedInput, EncodedInput],
+        text: Union[TextInput, PreTokenizedInput, list[TextInput], list[PreTokenizedInput]],
         text_pair: Optional[Union[TextInput, PreTokenizedInput, EncodedInput]] = None,
         add_special_tokens: bool = True,
         padding: Union[bool, str, PaddingStrategy] = False,
@@ -3149,7 +3155,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
 
     def _encode_plus(
         self,
-        text: Union[TextInput, PreTokenizedInput, EncodedInput],
+        text: Union[TextInput, PreTokenizedInput, list[TextInput], list[PreTokenizedInput]],
         text_pair: Optional[Union[TextInput, PreTokenizedInput, EncodedInput]] = None,
         add_special_tokens: bool = True,
         padding_strategy: PaddingStrategy = PaddingStrategy.DO_NOT_PAD,
@@ -3649,7 +3655,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
         num_tokens_to_remove: int = 0,
         truncation_strategy: Union[str, TruncationStrategy] = "longest_first",
         stride: int = 0,
-    ) -> tuple[list[int], list[int], list[int]]:
+    ) -> tuple[list[int], Optional[list[int]], list[int]]:
         """
         Truncates a sequence pair in-place following the strategy.
 
@@ -3682,7 +3688,7 @@ class PreTrainedTokenizerBase(SpecialTokensMixin, PushToHubMixin):
                 sequence returned. The value of this argument defines the number of additional tokens.
 
         Returns:
-            `tuple[list[int], list[int], list[int]]`: The truncated `ids`, the truncated `pair_ids` and the list of
+            `tuple[list[int], list[int] | None, list[int]]`: The truncated `ids`, the truncated `pair_ids` and the list of
             overflowing tokens. Note: The *longest_first* strategy returns empty list of overflowing tokens if a pair
             of sequences (or a batch of pairs) is provided.
         """
