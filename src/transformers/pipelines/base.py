@@ -210,7 +210,7 @@ def pad_collate_fn(tokenizer, feature_extractor):
 def infer_framework_load_model(
     model,
     config: AutoConfig,
-    model_classes: Optional[dict[str, tuple[type]]] = None,
+    model_classes: Optional[dict[str, tuple[type, ...]]] = None,
     task: Optional[str] = None,
     framework: Optional[str] = None,
     **model_kwargs,
@@ -341,7 +341,7 @@ def infer_framework_load_model(
 
 def infer_framework_from_model(
     model,
-    model_classes: Optional[dict[str, tuple[type]]] = None,
+    model_classes: Optional[dict[str, tuple[type, ...]]] = None,
     task: Optional[str] = None,
     framework: Optional[str] = None,
     **model_kwargs,
