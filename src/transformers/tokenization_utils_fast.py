@@ -37,6 +37,8 @@ from .tokenization_utils_base import (
     INIT_TOKENIZER_DOCSTRING,
     AddedToken,
     BatchEncoding,
+    EncodedInput,
+    EncodedInputPair,
     PreTokenizedInput,
     PreTokenizedInputPair,
     PreTrainedTokenizerBase,
@@ -376,7 +378,7 @@ class PreTrainedTokenizerFast(PreTrainedTokenizerBase):
     def _convert_id_to_token(self, index: int) -> Optional[str]:
         return self._tokenizer.id_to_token(int(index))
 
-    def _add_tokens(self, new_tokens: list[Union[str, AddedToken]], special_tokens=False) -> int:
+    def _add_tokens(self, new_tokens: Union[list[str], list[AddedToken]], special_tokens=False) -> int:
         if special_tokens:
             return self._tokenizer.add_special_tokens(new_tokens)
 
@@ -438,7 +440,7 @@ class PreTrainedTokenizerFast(PreTrainedTokenizerBase):
         self,
         padding_strategy: PaddingStrategy,
         truncation_strategy: TruncationStrategy,
-        max_length: int,
+        max_length: Optional[int],
         stride: int,
         pad_to_multiple_of: Optional[int],
         padding_side: Optional[str],
@@ -512,7 +514,12 @@ class PreTrainedTokenizerFast(PreTrainedTokenizerBase):
     def _batch_encode_plus(
         self,
         batch_text_or_text_pairs: Union[
-            list[TextInput], list[TextInputPair], list[PreTokenizedInput], list[PreTokenizedInputPair]
+            list[TextInput],
+            list[TextInputPair],
+            list[PreTokenizedInput],
+            list[PreTokenizedInputPair],
+            list[EncodedInput],
+            list[EncodedInputPair],
         ],
         add_special_tokens: bool = True,
         padding_strategy: PaddingStrategy = PaddingStrategy.DO_NOT_PAD,
@@ -531,6 +538,7 @@ class PreTrainedTokenizerFast(PreTrainedTokenizerBase):
         return_length: bool = False,
         verbose: bool = True,
         split_special_tokens: bool = False,
+        **kwargs: Any,
     ) -> BatchEncoding:
         if not isinstance(batch_text_or_text_pairs, (tuple, list)):
             raise TypeError(
@@ -602,8 +610,8 @@ class PreTrainedTokenizerFast(PreTrainedTokenizerBase):
 
     def _encode_plus(
         self,
-        text: Union[TextInput, PreTokenizedInput],
-        text_pair: Optional[Union[TextInput, PreTokenizedInput]] = None,
+        text: Union[TextInput, PreTokenizedInput, EncodedInput],
+        text_pair: Optional[Union[TextInput, PreTokenizedInput, EncodedInput]] = None,
         add_special_tokens: bool = True,
         padding_strategy: PaddingStrategy = PaddingStrategy.DO_NOT_PAD,
         truncation_strategy: TruncationStrategy = TruncationStrategy.DO_NOT_TRUNCATE,
@@ -612,7 +620,7 @@ class PreTrainedTokenizerFast(PreTrainedTokenizerBase):
         is_split_into_words: bool = False,
         pad_to_multiple_of: Optional[int] = None,
         padding_side: Optional[str] = None,
-        return_tensors: Optional[bool] = None,
+        return_tensors: Optional[str] = None,
         return_token_type_ids: Optional[bool] = None,
         return_attention_mask: Optional[bool] = None,
         return_overflowing_tokens: bool = False,

@@ -509,7 +509,7 @@ class PreTrainedTokenizer(PreTrainedTokenizerBase):
         """
         self.total_vocab_size = len(self.get_vocab())
 
-    def _add_tokens(self, new_tokens: Union[list[str], list[AddedToken]], special_tokens: bool = False) -> int:
+    def _add_tokens(self, new_tokens: list[Union[str, AddedToken]], special_tokens: bool = False) -> int:
         """
         Add a list of new tokens to the tokenizer class. If the new tokens are not in the vocabulary, they are added to
         it with indices starting from length of the current vocabulary. Special tokens are sometimes already in the
