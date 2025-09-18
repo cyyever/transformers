@@ -619,6 +619,7 @@ class FeaturesManager:
 
         return model.config.model_type, FeaturesManager._SUPPORTED_MODEL_TYPE[model_type][feature]
 
+    @staticmethod
     def get_config(model_type: str, feature: str) -> OnnxConfig:
         """
         Gets the OnnxConfig for a model_type and feature combination.
