@@ -59,9 +59,7 @@ if is_torch_available():
 
     from transformers import (
         AutoModelForCausalLM,
-        AutoTokenizer,
         BitsAndBytesConfig,
-        GenerationConfig,
     )
 
 ALLOWED_KEY_CHARS = set(string.ascii_letters + string.whitespace)
