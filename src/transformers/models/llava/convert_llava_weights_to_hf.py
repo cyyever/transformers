@@ -76,9 +76,8 @@ def load_original_state_dict(model_id):
     if "lm_head.weight" not in original_state_dict:
         original_state_dict["lm_head.weight"] = original_state_dict["model.embed_tokens.weight"].clone()
 
-    if "model.image_newline" in original_state_dict:
-        # not used in the original implementation because "merge_type=flat"
-        del original_state_dict["model.image_newline"]
+    # not used in the original implementation because "merge_type=flat"
+    original_state_dict.pop("model.image_newline", None)
     return original_state_dict
 
 
