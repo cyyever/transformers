@@ -726,8 +726,8 @@ class ModernBertDecoderForSequenceClassification(ModernBertDecoderPreTrainedMode
 
 
 __all__ = [
-    "ModernBertDecoderModel",
-    "ModernBertDecoderPreTrainedModel",
     "ModernBertDecoderForCausalLM",
     "ModernBertDecoderForSequenceClassification",
+    "ModernBertDecoderModel",
+    "ModernBertDecoderPreTrainedModel",
 ]

@@ -1341,11 +1341,11 @@ class Gemma3TextForSequenceClassification(GenericForSequenceClassification, Gemm
 
 
 __all__ = [
-    "Gemma3PreTrainedModel",
-    "Gemma3TextModel",
     "Gemma3ForCausalLM",
     "Gemma3ForConditionalGeneration",
-    "Gemma3Model",
     "Gemma3ForSequenceClassification",
+    "Gemma3Model",
+    "Gemma3PreTrainedModel",
     "Gemma3TextForSequenceClassification",
+    "Gemma3TextModel",
 ]

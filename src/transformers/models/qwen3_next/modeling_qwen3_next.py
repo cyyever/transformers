@@ -1269,8 +1269,8 @@ class Qwen3NextForQuestionAnswering(GenericForQuestionAnswering, Qwen3NextPreTra
 __all__ = [
     "Qwen3NextForCausalLM",
     "Qwen3NextForQuestionAnswering",
-    "Qwen3NextModel",
-    "Qwen3NextPreTrainedModel",
     "Qwen3NextForSequenceClassification",
     "Qwen3NextForTokenClassification",
+    "Qwen3NextModel",
+    "Qwen3NextPreTrainedModel",
 ]

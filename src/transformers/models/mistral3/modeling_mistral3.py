@@ -533,4 +533,4 @@ class Mistral3ForConditionalGeneration(Mistral3PreTrainedModel, GenerationMixin)
         return model_inputs
 
 
-__all__ = ["Mistral3Model", "Mistral3PreTrainedModel", "Mistral3ForConditionalGeneration"]
+__all__ = ["Mistral3ForConditionalGeneration", "Mistral3Model", "Mistral3PreTrainedModel"]

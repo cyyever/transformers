@@ -1303,4 +1303,4 @@ class BltForCausalLM(BltPreTrainedModel, GenerationMixin):
         )
 
 
-__all__ = ["BltPreTrainedModel", "BltModel", "BltPatcher", "BltForCausalLM"]
+__all__ = ["BltForCausalLM", "BltModel", "BltPatcher", "BltPreTrainedModel"]

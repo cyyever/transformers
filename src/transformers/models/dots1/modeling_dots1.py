@@ -609,4 +609,4 @@ class Dots1ForCausalLM(Dots1PreTrainedModel, GenerationMixin):
         )
 
 
-__all__ = ["Dots1PreTrainedModel", "Dots1Model", "Dots1ForCausalLM"]
+__all__ = ["Dots1ForCausalLM", "Dots1Model", "Dots1PreTrainedModel"]

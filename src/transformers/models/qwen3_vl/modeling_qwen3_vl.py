@@ -1558,9 +1558,9 @@ class Qwen3VLForConditionalGeneration(Qwen3VLPreTrainedModel, GenerationMixin):
 
 
 __all__ = [
-    "Qwen3VLVisionModel",
     "Qwen3VLForConditionalGeneration",
     "Qwen3VLModel",
     "Qwen3VLPreTrainedModel",
     "Qwen3VLTextModel",
+    "Qwen3VLVisionModel",
 ]

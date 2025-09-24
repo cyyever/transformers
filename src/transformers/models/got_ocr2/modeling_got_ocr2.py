@@ -837,4 +837,4 @@ class GotOcr2ForConditionalGeneration(GotOcr2PreTrainedModel, GenerationMixin):
         return model_inputs
 
 
-__all__ = ["GotOcr2PreTrainedModel", "GotOcr2Model", "GotOcr2ForConditionalGeneration"]
+__all__ = ["GotOcr2ForConditionalGeneration", "GotOcr2Model", "GotOcr2PreTrainedModel"]

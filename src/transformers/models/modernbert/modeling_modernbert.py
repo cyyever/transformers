@@ -1532,11 +1532,11 @@ class ModernBertForMultipleChoice(ModernBertPreTrainedModel):
 
 
 __all__ = [
-    "ModernBertModel",
-    "ModernBertPreTrainedModel",
     "ModernBertForMaskedLM",
+    "ModernBertForMultipleChoice",
+    "ModernBertForQuestionAnswering",
     "ModernBertForSequenceClassification",
     "ModernBertForTokenClassification",
-    "ModernBertForQuestionAnswering",
-    "ModernBertForMultipleChoice",
+    "ModernBertModel",
+    "ModernBertPreTrainedModel",
 ]

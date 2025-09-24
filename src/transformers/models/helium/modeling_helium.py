@@ -489,9 +489,9 @@ class HeliumForTokenClassification(GenericForTokenClassification, HeliumPreTrain
 
 
 __all__ = [
-    "HeliumPreTrainedModel",
-    "HeliumModel",
     "HeliumForCausalLM",
     "HeliumForSequenceClassification",
     "HeliumForTokenClassification",
+    "HeliumModel",
+    "HeliumPreTrainedModel",
 ]

@@ -633,8 +633,8 @@ class DeepseekV2ForSequenceClassification(GenericForSequenceClassification, Deep
 
 
 __all__ = [
-    "DeepseekV2PreTrainedModel",
-    "DeepseekV2Model",
     "DeepseekV2ForCausalLM",
     "DeepseekV2ForSequenceClassification",
+    "DeepseekV2Model",
+    "DeepseekV2PreTrainedModel",
 ]

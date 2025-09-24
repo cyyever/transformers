@@ -422,4 +422,4 @@ class Cohere2VisionForConditionalGeneration(Cohere2VisionPreTrainedModel, Genera
         return model_inputs
 
 
-__all__ = ["Cohere2VisionForConditionalGeneration", "Cohere2VisionPreTrainedModel", "Cohere2VisionModel"]
+__all__ = ["Cohere2VisionForConditionalGeneration", "Cohere2VisionModel", "Cohere2VisionPreTrainedModel"]

@@ -208,4 +208,4 @@ class GotOcr2Config(PretrainedConfig):
         super().__init__(**kwargs)
 
 
-__all__ = ["GotOcr2VisionConfig", "GotOcr2Config"]
+__all__ = ["GotOcr2Config", "GotOcr2VisionConfig"]

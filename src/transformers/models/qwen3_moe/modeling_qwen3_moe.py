@@ -705,8 +705,8 @@ class Qwen3MoeForQuestionAnswering(GenericForQuestionAnswering, Qwen3MoePreTrain
 __all__ = [
     "Qwen3MoeForCausalLM",
     "Qwen3MoeForQuestionAnswering",
-    "Qwen3MoeModel",
-    "Qwen3MoePreTrainedModel",
     "Qwen3MoeForSequenceClassification",
     "Qwen3MoeForTokenClassification",
+    "Qwen3MoeModel",
+    "Qwen3MoePreTrainedModel",
 ]

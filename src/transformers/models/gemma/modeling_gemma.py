@@ -508,9 +508,9 @@ class GemmaForTokenClassification(GenericForTokenClassification, GemmaPreTrained
 
 
 __all__ = [
-    "GemmaModel",
     "GemmaForCausalLM",
     "GemmaForSequenceClassification",
     "GemmaForTokenClassification",
+    "GemmaModel",
     "GemmaPreTrainedModel",
 ]

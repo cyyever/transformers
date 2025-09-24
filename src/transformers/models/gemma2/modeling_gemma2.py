@@ -591,8 +591,8 @@ class Gemma2ForTokenClassification(GenericForTokenClassification, Gemma2PreTrain
 
 __all__ = [
     "Gemma2ForCausalLM",
-    "Gemma2Model",
-    "Gemma2PreTrainedModel",
     "Gemma2ForSequenceClassification",
     "Gemma2ForTokenClassification",
+    "Gemma2Model",
+    "Gemma2PreTrainedModel",
 ]

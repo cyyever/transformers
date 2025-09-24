@@ -700,8 +700,8 @@ class Dinov2WithRegistersBackbone(Dinov2WithRegistersPreTrainedModel, BackboneMi
 
 
 __all__ = [
-    "Dinov2WithRegistersPreTrainedModel",
-    "Dinov2WithRegistersModel",
-    "Dinov2WithRegistersForImageClassification",
     "Dinov2WithRegistersBackbone",
+    "Dinov2WithRegistersForImageClassification",
+    "Dinov2WithRegistersModel",
+    "Dinov2WithRegistersPreTrainedModel",
 ]

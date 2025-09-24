@@ -1305,10 +1305,10 @@ class T5GemmaForTokenClassification(T5GemmaPreTrainedModel):
 
 
 __all__ = [
-    "T5GemmaForConditionalGeneration",
-    "T5GemmaModel",
     "T5GemmaEncoderModel",
-    "T5GemmaPreTrainedModel",
+    "T5GemmaForConditionalGeneration",
     "T5GemmaForSequenceClassification",
     "T5GemmaForTokenClassification",
+    "T5GemmaModel",
+    "T5GemmaPreTrainedModel",
 ]

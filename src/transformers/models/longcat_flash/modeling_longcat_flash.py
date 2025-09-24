@@ -681,4 +681,4 @@ class LongcatFlashForCausalLM(LongcatFlashPreTrainedModel, GenerationMixin):
         )
 
 
-__all__ = ["LongcatFlashPreTrainedModel", "LongcatFlashModel", "LongcatFlashForCausalLM"]
+__all__ = ["LongcatFlashForCausalLM", "LongcatFlashModel", "LongcatFlashPreTrainedModel"]

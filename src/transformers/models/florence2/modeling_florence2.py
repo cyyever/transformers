@@ -1042,8 +1042,8 @@ class Florence2ForConditionalGeneration(Florence2PreTrainedModel, GenerationMixi
 
 
 __all__ = [
-    "Florence2Model",
     "Florence2ForConditionalGeneration",
+    "Florence2Model",
     "Florence2PreTrainedModel",
     "Florence2VisionBackbone",
     "Florence2VisionPreTrainedModel",

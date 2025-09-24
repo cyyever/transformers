@@ -955,4 +955,4 @@ class DiaForConditionalGeneration(DiaPreTrainedModel, DiaGenerationMixin):
         )
 
 
-__all__ = ["DiaModel", "DiaPreTrainedModel", "DiaForConditionalGeneration"]
+__all__ = ["DiaForConditionalGeneration", "DiaModel", "DiaPreTrainedModel"]
