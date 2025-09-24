@@ -222,7 +222,7 @@ def add_pipeline_model_mapping(test_class, overwrite=False):
         # mark the lines of the currently existing `pipeline_model_mapping` to be removed.
         for idx in range(start_idx, end_idx + 1):
             # These lines are going to be removed before writing to the test file.
-            class_lines[idx] = None  # noqa
+            class_lines[idx] = None
 
     # Make sure the test class is a subclass of `PipelineTesterMixin`.
     parent_classes = [x.__name__ for x in test_class.__bases__]
@@ -238,7 +238,7 @@ def add_pipeline_model_mapping(test_class, overwrite=False):
             if line.strip().endswith("):"):
                 # mark the lines of the declaration of `test_class` to be removed
                 for _idx in range(idx + 1):
-                    class_lines[_idx] = None  # noqa
+                    class_lines[_idx] = None
                 break
         # Add the new, one-line, class declaration for `test_class`
         class_lines[0] = f"class {test_class.__name__}({parent_classes}):\n"
