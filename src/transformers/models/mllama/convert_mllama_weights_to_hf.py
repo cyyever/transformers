@@ -185,7 +185,7 @@ def interpolate_positional_embedding(
     total_num_patches, dim = positional_embedding.shape
 
     # compute current and target number of patches for height and width
-    num_patches = int(round(total_num_patches**0.5))
+    num_patches = round(total_num_patches**0.5)
     new_num_patches = vision_tile_size // vision_patch_size
 
     # Check if the number of patches is already the desired size

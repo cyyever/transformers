@@ -285,7 +285,7 @@ def get_size_with_aspect_ratio(
         max_original_size = float(max((height, width)))
         if max_original_size / min_original_size * size > max_size:
             raw_size = max_size * min_original_size / max_original_size
-            size = int(round(raw_size))
+            size = round(raw_size)
 
     if width < height:
         ow = size

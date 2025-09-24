@@ -761,7 +761,7 @@ class BarkCoarseModel(BarkCausalModel):
                 ]
             )
 
-            n_coarse_hist_provided = int(round(n_semantic_hist_provided * semantic_to_coarse_ratio))
+            n_coarse_hist_provided = round(n_semantic_hist_provided * semantic_to_coarse_ratio)
 
             x_semantic_history = x_semantic_history[:, -n_semantic_hist_provided:].int()
             x_coarse_history = x_coarse_history[:, -n_coarse_hist_provided:].int()
@@ -863,7 +863,7 @@ class BarkCoarseModel(BarkCausalModel):
         len_coarse_history = x_coarse.shape[1]
 
         for _ in range(n_window_steps):
-            semantic_idx = base_semantic_idx + int(round(total_generated_len / semantic_to_coarse_ratio))
+            semantic_idx = base_semantic_idx + round(total_generated_len / semantic_to_coarse_ratio)
 
             # pad from right side
             input_coarse = semantic_output[:, np.max([0, semantic_idx - max_semantic_history]) :]

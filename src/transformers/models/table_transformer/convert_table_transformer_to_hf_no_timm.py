@@ -287,7 +287,7 @@ def resize(image, checkpoint_url):
     current_max_size = max(width, height)
     target_max_size = 800 if "detection" in checkpoint_url else 1000
     scale = target_max_size / current_max_size
-    resized_image = image.resize((int(round(scale * width)), int(round(scale * height))))
+    resized_image = image.resize((round(scale * width), round(scale * height)))
 
     return resized_image
 

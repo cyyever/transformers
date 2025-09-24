@@ -94,8 +94,8 @@ class FlavaMaskingGenerator:
         for _attempt in range(10):
             target_area = random.uniform(self.mask_group_min_patches, max_mask_patches)
             aspect_ratio = math.exp(random.uniform(*self.log_aspect_ratio))
-            height = int(round(math.sqrt(target_area * aspect_ratio)))
-            width = int(round(math.sqrt(target_area / aspect_ratio)))
+            height = round(math.sqrt(target_area * aspect_ratio))
+            width = round(math.sqrt(target_area / aspect_ratio))
             if width < self.width and height < self.height:
                 top = random.randint(0, self.height - height)
                 left = random.randint(0, self.width - width)

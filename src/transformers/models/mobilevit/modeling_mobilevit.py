@@ -126,7 +126,7 @@ class MobileViTInvertedResidual(nn.Module):
         self, config: MobileViTConfig, in_channels: int, out_channels: int, stride: int, dilation: int = 1
     ) -> None:
         super().__init__()
-        expanded_channels = make_divisible(int(round(in_channels * config.expand_ratio)), 8)
+        expanded_channels = make_divisible(round(in_channels * config.expand_ratio), 8)
 
         if stride not in [1, 2]:
             raise ValueError(f"Invalid stride {stride}.")

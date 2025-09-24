@@ -235,8 +235,8 @@ class Emu3Processor(ProcessorMixin):
         current_area = width * height
         target_ratio = (image_area / current_area) ** 0.5
 
-        token_height = int(round(height * target_ratio / spatial_factor))
-        token_width = int(round(width * target_ratio / spatial_factor))
+        token_height = round(height * target_ratio / spatial_factor)
+        token_width = round(width * target_ratio / spatial_factor)
         return token_height, token_width
 
     def postprocess(self, images: ImageInput, **kwargs):

@@ -369,9 +369,9 @@ class SequentialDistributedSampler(Sampler):
         num_samples = len(self.dataset)
         # Add extra samples to make num_samples a multiple of batch_size if passed
         if batch_size is not None:
-            self.num_samples = int(math.ceil(num_samples / (batch_size * num_replicas))) * batch_size
+            self.num_samples = math.ceil(num_samples / (batch_size * num_replicas)) * batch_size
         else:
-            self.num_samples = int(math.ceil(num_samples / num_replicas))
+            self.num_samples = math.ceil(num_samples / num_replicas)
         self.total_size = self.num_samples * self.num_replicas
         self.batch_size = batch_size
 

@@ -113,8 +113,8 @@ class Gemma3ImageProcessorFast(BaseImageProcessorFast):
                 return []
 
             # Select ideal number of crops close to the image aspect ratio and such that crop_size > min_crop_size.
-            num_crops_w = int(math.floor(width / height + 0.5))  # Half round up rounding.
-            num_crops_w = min(int(math.floor(width / pan_and_scan_min_crop_size)), num_crops_w)
+            num_crops_w = math.floor(width / height + 0.5)  # Half round up rounding.
+            num_crops_w = min(math.floor(width / pan_and_scan_min_crop_size), num_crops_w)
 
             # Make sure the number of crops is in range [2, pan_and_scan_max_num_crops].
             num_crops_w = max(2, num_crops_w)
@@ -128,16 +128,16 @@ class Gemma3ImageProcessorFast(BaseImageProcessorFast):
                 return []
 
             # Select ideal number of crops close to the image aspect ratio and such that crop_size > min_crop_size.
-            num_crops_h = int(math.floor(height / width + 0.5))
-            num_crops_h = min(int(math.floor(height / pan_and_scan_min_crop_size)), num_crops_h)
+            num_crops_h = math.floor(height / width + 0.5)
+            num_crops_h = min(math.floor(height / pan_and_scan_min_crop_size), num_crops_h)
 
             # Make sure the number of crops is in range [2, pan_and_scan_max_num_crops].
             num_crops_h = max(2, num_crops_h)
             num_crops_h = min(pan_and_scan_max_num_crops, num_crops_h)
             num_crops_w = 1
 
-        crop_size_w = int(math.ceil(width / num_crops_w))
-        crop_size_h = int(math.ceil(height / num_crops_h))
+        crop_size_w = math.ceil(width / num_crops_w)
+        crop_size_h = math.ceil(height / num_crops_h)
 
         # Don't apply PaS if crop size is too small.
         if min(crop_size_w, crop_size_h) < pan_and_scan_min_crop_size:
