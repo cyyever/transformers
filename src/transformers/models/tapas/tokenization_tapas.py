@@ -1141,7 +1141,7 @@ class TapasTokenizer(PreTrainedTokenizer):
         table_ids = list(zip(*table_data))[0] if len(table_data) > 0 else list(zip(*table_data))
         table_ids = self.convert_tokens_to_ids(list(table_ids))
 
-        if "return_overflowing_tokens" in kwargs and kwargs["return_overflowing_tokens"]:
+        if kwargs.get("return_overflowing_tokens"):
             raise ValueError("TAPAS does not return overflowing tokens as it works on tables.")
 
         if add_special_tokens:
