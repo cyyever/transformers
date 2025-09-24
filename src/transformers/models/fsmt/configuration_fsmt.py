@@ -195,8 +195,7 @@ class FSMTConfig(PretrainedConfig):
             is_encoder_decoder=is_encoder_decoder,
             num_hidden_layers=encoder_layers,
         )
-        if "decoder" in common_kwargs:
-            del common_kwargs["decoder"]
+        common_kwargs.pop("decoder", None)
 
         self.scale_embedding = scale_embedding  # scale factor will be sqrt(d_model) if True
 
