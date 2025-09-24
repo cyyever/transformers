@@ -179,8 +179,8 @@ def _generate_crop_boxes(
     target_size: int,  # Is it tuple here?
     crop_n_layers: int = 0,
     overlap_ratio: float = 512 / 1500,
-    points_per_crop: Optional[int] = 32,
-    crop_n_points_downscale_factor: Optional[list[int]] = 1,
+    points_per_crop: int = 32,
+    crop_n_points_downscale_factor: int = 1,
 ) -> tuple[list[list[int]], list[int]]:
     """
     Generates a list of crop boxes of different sizes. Each layer has (2**i)**2 boxes for the ith layer.
