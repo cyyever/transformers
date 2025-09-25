@@ -3772,7 +3772,6 @@ class Qwen2_5OmniForConditionalGeneration(Qwen2_5OmniPreTrainedModel, Generation
             proxies=kwargs.pop("proxies", None),
             resume_download=kwargs.pop("resume_download", None),
             local_files_only=kwargs.pop("local_files_only", False),
-            token=kwargs.pop("use_auth_token", None),
             revision=kwargs.pop("revision", None),
         )
         if spk_path is None:
