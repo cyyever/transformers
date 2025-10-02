@@ -98,7 +98,7 @@ class ViTMAEModelTester:
         # in ViTMAE, the expected sequence length = (num_patches + 1) * (1 - config.mask_ratio), rounded above
         # (we add 1 for the [CLS] token)
         num_patches = (image_size // patch_size) ** 2
-        self.seq_length = int(math.ceil((1 - mask_ratio) * (num_patches + 1)))
+        self.seq_length = math.ceil((1 - mask_ratio) * (num_patches + 1))
         self.mask_ratio = mask_ratio
         self.num_masks = int(mask_ratio * self.seq_length)
         self.mask_length = num_patches

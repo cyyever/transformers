@@ -49,9 +49,9 @@ def rescale_stride(stride, ratio):
 
     new_strides = []
     for input_n, left, right in stride:
-        token_n = int(round(input_n * ratio))
-        left = int(round(left / input_n * token_n))
-        right = int(round(right / input_n * token_n))
+        token_n = round(input_n * ratio)
+        left = round(left / input_n * token_n)
+        right = round(right / input_n * token_n)
         new_stride = (token_n, left, right)
         new_strides.append(new_stride)
 
@@ -429,7 +429,7 @@ class AutomaticSpeechRecognitionPipeline(ChunkPipeline):
                 # swallowed by the `feature_extractor` later, and then batching
                 # can add extra data in the inputs, so we need to keep track
                 # of the original length in the stride so we can cut properly.
-                stride = (inputs.shape[0], int(round(stride[0] * ratio)), int(round(stride[1] * ratio)))
+                stride = (inputs.shape[0], round(stride[0] * ratio), round(stride[1] * ratio))
         if not isinstance(inputs, (np.ndarray, torch.Tensor)):
             raise TypeError(f"We expect a numpy ndarray or torch tensor as input, got `{type(inputs)}`")
         if inputs.ndim != 1:

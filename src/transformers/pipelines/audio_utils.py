@@ -125,7 +125,7 @@ def ffmpeg_microphone(
 
     ffmpeg_command.extend(ffmpeg_additional_args)
 
-    chunk_len = int(round(sampling_rate * chunk_length_s)) * size_of_sample
+    chunk_len = round(sampling_rate * chunk_length_s) * size_of_sample
     iterator = _ffmpeg_stream(ffmpeg_command, chunk_len)
     for item in iterator:
         yield item
@@ -203,12 +203,12 @@ def ffmpeg_microphone_live(
 
     if stride_length_s is None:
         stride_length_s = chunk_length_s / 6
-    chunk_len = int(round(sampling_rate * chunk_length_s)) * size_of_sample
+    chunk_len = round(sampling_rate * chunk_length_s) * size_of_sample
     if isinstance(stride_length_s, (int, float)):
         stride_length_s = [stride_length_s, stride_length_s]
 
-    stride_left = int(round(sampling_rate * stride_length_s[0])) * size_of_sample
-    stride_right = int(round(sampling_rate * stride_length_s[1])) * size_of_sample
+    stride_left = round(sampling_rate * stride_length_s[0]) * size_of_sample
+    stride_right = round(sampling_rate * stride_length_s[1]) * size_of_sample
     audio_time = datetime.datetime.now()
     delta = datetime.timedelta(seconds=chunk_s)
     for item in chunk_bytes_iter(microphone, chunk_len, stride=(stride_left, stride_right), stream=True):

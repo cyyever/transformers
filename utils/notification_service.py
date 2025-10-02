@@ -331,7 +331,7 @@ class Message:
 
         return {"type": "section", "text": {"type": "mrkdwn", "text": category_failures_report}}
 
-    def compute_diff_for_failure_reports(self, curr_failure_report, prev_failure_report):  # noqa
+    def compute_diff_for_failure_reports(self, curr_failure_report, prev_failure_report):
         # Remove the leading and training parts that don't contain failure count information.
         model_failures = curr_failure_report.split("\n")[3:-2]
         prev_model_failures = prev_failure_report.split("\n")[3:-2]

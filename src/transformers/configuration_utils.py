@@ -916,8 +916,7 @@ class PretrainedConfig(PushToHubMixin):
         self._remove_keys_not_serialized(serializable_config_dict)
 
         # Key removed only in diff dict
-        if "_name_or_path" in serializable_config_dict:
-            del serializable_config_dict["_name_or_path"]
+        serializable_config_dict.pop("_name_or_path", None)
 
         if hasattr(self, "quantization_config"):
             serializable_config_dict["quantization_config"] = (
@@ -1069,20 +1068,15 @@ class PretrainedConfig(PushToHubMixin):
             # Pop the `_pre_quantization_dtype` as torch.dtypes are not serializable.
             _ = d.pop("_pre_quantization_dtype", None)
 
-        if "_auto_class" in d:
-            del d["_auto_class"]
+        d.pop("_auto_class", None)
         if "_output_attentions" in d:
             d["output_attentions"] = d.pop("_output_attentions")
-        if "_commit_hash" in d:
-            del d["_commit_hash"]
-        if "_attn_implementation_internal" in d:
-            del d["_attn_implementation_internal"]
+        d.pop("_commit_hash", None)
+        d.pop("_attn_implementation_internal", None)
         # Do not serialize `base_model_tp_plan` for now
-        if "base_model_tp_plan" in d:
-            del d["base_model_tp_plan"]
+        d.pop("base_model_tp_plan", None)
         # Do not serialize `base_model_pp_plan` for now
-        if "base_model_pp_plan" in d:
-            del d["base_model_pp_plan"]
+        d.pop("base_model_pp_plan", None)
         for value in d.values():
             if isinstance(value, dict):
                 self._remove_keys_not_serialized(value)

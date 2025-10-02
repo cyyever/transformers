@@ -103,7 +103,7 @@ class YolosImageProcessingTester:
                 min_original_size = float(min((height, width)))
                 max_original_size = float(max((height, width)))
                 if max_original_size / min_original_size * size > max_size:
-                    size = int(round(max_size * min_original_size / max_original_size))
+                    size = round(max_size * min_original_size / max_original_size)
 
             if width <= height and width != size:
                 height = int(size * height / width)

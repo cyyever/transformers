@@ -128,15 +128,15 @@ class Glm4vVideoProcessor(BaseVideoProcessor):
         duration = metadata.duration or round(max_frame_idx / metadata.fps) + 1
 
         if duration <= self.max_duration:
-            n = int(math.floor(duration * requested_fps))
-            frame_indices = [min(max_frame_idx, int(math.ceil(i * metadata.fps / requested_fps))) for i in range(n)]
+            n = math.floor(duration * requested_fps)
+            frame_indices = [min(max_frame_idx, math.ceil(i * metadata.fps / requested_fps)) for i in range(n)]
         else:
             num_samples = int(self.max_duration * requested_fps)
             if num_samples >= total_frames:
                 frame_indices = list(range(total_frames))
             else:
                 target_seconds = np.linspace(0, duration, num_samples, endpoint=True)
-                frame_indices = [min(max_frame_idx, int(math.ceil(t * metadata.fps))) for t in target_seconds]
+                frame_indices = [min(max_frame_idx, math.ceil(t * metadata.fps)) for t in target_seconds]
 
         seen, uniq = set(), []
         for idx in frame_indices:

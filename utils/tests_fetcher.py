@@ -499,7 +499,7 @@ def get_doctest_files(diff_with_last_commit: bool = False) -> list[str]:
     """
     repo = Repo(PATH_TO_REPO)
 
-    test_files_to_run = []  # noqa
+    test_files_to_run = []
     if not diff_with_last_commit:
         print(f"main is at {repo.refs.main.commit}")
         print(f"Current head is at {repo.head.commit}")

@@ -254,7 +254,7 @@ class SmolVLMVideoProcessor(BaseVideoProcessor):
         total_num_frames = metadata.total_num_frames
 
         # Step 1) Estimate how many frames we'd sample at `target_fps`, fallback if target_fps <= 0
-        estimated_frames = int(round(fps * metadata["duration"]))
+        estimated_frames = round(fps * metadata["duration"])
 
         # Step 2) desired_frames
         desired_frames = min(estimated_frames, num_frames)

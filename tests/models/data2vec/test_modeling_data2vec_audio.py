@@ -110,7 +110,7 @@ class Data2VecAudioModelTester:
         output_seq_length = self.seq_length
         for kernel, stride in zip(self.conv_kernel, self.conv_stride):
             output_seq_length = (output_seq_length - (kernel - 1)) / stride
-        self.output_seq_length = int(math.ceil(output_seq_length))
+        self.output_seq_length = math.ceil(output_seq_length)
         self.encoder_seq_length = self.output_seq_length
 
         self.adapter_output_seq_length = (self.output_seq_length - 1) // adapter_stride + 1

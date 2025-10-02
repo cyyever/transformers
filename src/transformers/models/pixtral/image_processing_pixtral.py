@@ -129,8 +129,8 @@ def get_resize_output_image_size(
     if ratio > 1:
         # Original implementation uses `round` which utilises bankers rounding, which can lead to surprising results
         # Here we use floor to ensure the image is always smaller than the given "longest_edge"
-        height = int(math.floor(height / ratio))
-        width = int(math.floor(width / ratio))
+        height = math.floor(height / ratio)
+        width = math.floor(width / ratio)
 
     num_height_tokens, num_width_tokens = _num_image_tokens((height, width), (patch_height, patch_width))
     return num_height_tokens * patch_height, num_width_tokens * patch_width
@@ -302,8 +302,8 @@ class PixtralImageProcessor(BaseImageProcessor):
         """
 
         max_shape = (
-            max([size[0] for size in image_sizes]),
-            max([size[1] for size in image_sizes]),
+            max(size[0] for size in image_sizes),
+            max(size[1] for size in image_sizes),
         )
         pixel_values = [
             pad(

@@ -383,7 +383,6 @@ class RepetitionPenaltyLogitsProcessor(LogitsProcessor):
                 penalty_scores = torch.where(last_scores < 0, last_scores * self.penalty, last_scores / self.penalty)
                 scores[0, last_positions, :] = torch.where(token_mask, penalty_scores, last_scores)
             else:
-                batch_size, seq_len, vocab_size = scores.shape
                 last_scores = scores[:, -1, :]
                 token_mask = torch.zeros_like(last_scores, dtype=torch.bool)
                 if input_ids.dim() == 1:

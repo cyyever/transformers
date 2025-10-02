@@ -246,8 +246,8 @@ def _generate_per_layer_crops(crop_n_layers, overlap_ratio, original_size):
         n_crops_per_side = 2 ** (i_layer + 1)
         overlap = int(overlap_ratio * short_side * (2 / n_crops_per_side))
 
-        crop_width = int(math.ceil((overlap * (n_crops_per_side - 1) + im_width) / n_crops_per_side))
-        crop_height = int(math.ceil((overlap * (n_crops_per_side - 1) + im_height) / n_crops_per_side))
+        crop_width = math.ceil((overlap * (n_crops_per_side - 1) + im_width) / n_crops_per_side)
+        crop_height = math.ceil((overlap * (n_crops_per_side - 1) + im_height) / n_crops_per_side)
 
         crop_box_x0 = [int((crop_width - overlap) * i) for i in range(n_crops_per_side)]
         crop_box_y0 = [int((crop_height - overlap) * i) for i in range(n_crops_per_side)]

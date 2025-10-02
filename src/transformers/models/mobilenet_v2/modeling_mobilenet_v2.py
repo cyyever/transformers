@@ -48,7 +48,7 @@ def make_divisible(value: int, divisor: int = 8, min_value: Optional[int] = None
 
 
 def apply_depth_multiplier(config: MobileNetV2Config, channels: int) -> int:
-    return make_divisible(int(round(channels * config.depth_multiplier)), config.depth_divisible_by, config.min_depth)
+    return make_divisible(round(channels * config.depth_multiplier), config.depth_divisible_by, config.min_depth)
 
 
 def apply_tf_padding(features: torch.Tensor, conv_layer: nn.Conv2d) -> torch.Tensor:
@@ -162,7 +162,7 @@ class MobileNetV2InvertedResidual(nn.Module):
         super().__init__()
 
         expanded_channels = make_divisible(
-            int(round(in_channels * config.expand_ratio)), config.depth_divisible_by, config.min_depth
+            round(in_channels * config.expand_ratio), config.depth_divisible_by, config.min_depth
         )
 
         if stride not in [1, 2]:

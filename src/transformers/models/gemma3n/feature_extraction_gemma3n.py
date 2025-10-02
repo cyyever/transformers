@@ -188,8 +188,8 @@ class Gemma3nAudioFeatureExtractor(SequenceFeatureExtractor):
         self.fft_overdrive = fft_overdrive
         self.dither = dither
         self.input_scale_factor = input_scale_factor
-        self.frame_length = int(round(sampling_rate * frame_length_ms / 1000.0))
-        self.hop_length = int(round(sampling_rate * hop_length_ms / 1000.0))
+        self.frame_length = round(sampling_rate * frame_length_ms / 1000.0)
+        self.hop_length = round(sampling_rate * hop_length_ms / 1000.0)
         self.mel_floor = np.array(mel_floor, dtype=np.float64)
 
         fft_length = 2 ** math.ceil(math.log2(self.frame_length))

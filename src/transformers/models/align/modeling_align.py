@@ -448,7 +448,7 @@ class AlignVisionEncoder(nn.Module):
 
         def round_repeats(repeats):
             # Round number of block repeats based on depth multiplier.
-            return int(math.ceil(self.depth_coefficient * repeats))
+            return math.ceil(self.depth_coefficient * repeats)
 
         num_base_blocks = len(config.in_channels)
         num_blocks = sum(round_repeats(n) for n in config.num_block_repeats)

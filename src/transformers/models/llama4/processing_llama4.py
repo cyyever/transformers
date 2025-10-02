@@ -96,7 +96,7 @@ class Llama4Processor(ProcessorMixin):
     ):
         super().__init__(image_processor, tokenizer, chat_template=chat_template)
 
-        self.downsample_ratio = int(round(1.0 / (pixel_shuffle_ratio**2)))
+        self.downsample_ratio = round(1.0 / (pixel_shuffle_ratio**2))
         self.patch_size = patch_size
 
         self.fake_image_token = fake_image_token

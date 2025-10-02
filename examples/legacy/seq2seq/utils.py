@@ -394,7 +394,7 @@ class DistributedSortishSampler(Sampler):
         self.rank = rank
         self.epoch = 0
         if add_extra_examples:
-            self.num_samples = int(math.ceil(len(self.dataset) * 1.0 / self.num_replicas))
+            self.num_samples = math.ceil(len(self.dataset) * 1.0 / self.num_replicas)
             self.total_size = self.num_samples * self.num_replicas
         else:
             self.total_size = len(dataset)

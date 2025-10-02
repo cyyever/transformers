@@ -170,7 +170,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--test_method_name",
-        help="Scan only this test method (single‑test mode)",
+        help="Scan only this test method (single-test mode)",
     )
     args = parser.parse_args()
 
