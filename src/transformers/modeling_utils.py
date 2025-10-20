@@ -389,9 +389,9 @@ if is_torch_greater_or_equal("2.3.0"):
 
 
 def load_state_dict(
-    checkpoint_file: Union[str, os.PathLike],
+    checkpoint_file: str | os.PathLike,
     is_quantized: bool = False,
-    map_location: Optional[Union[str, torch.device]] = "cpu",
+    map_location: str | torch.device | None = "cpu",
     weights_only: bool = True,
 ):
     """
@@ -535,8 +535,8 @@ def _infer_parameter_dtype(
     model: "PreTrainedModel",
     param_name: str,
     empty_param: torch.Tensor,
-    hf_quantizer: Optional[HfQuantizer] = None,
-) -> Union[bool, Optional[torch.dtype]]:
+    hf_quantizer: HfQuantizer | None = None,
+) -> bool | torch.dtype | None:
     try:
         old_param = model.get_parameter_or_buffer(param_name)
     except Exception as e:
@@ -576,12 +576,12 @@ def _load_state_dict_into_meta_model(
     state_dict: dict,
     shard_file: str,
     reverse_renaming_mapping: dict[str, str],
-    device_map: Optional[dict] = None,
-    disk_offload_folder: Optional[str] = None,
-    disk_offload_index: Optional[dict] = None,
-    hf_quantizer: Optional[HfQuantizer] = None,
+    device_map: dict | None = None,
+    disk_offload_folder: str | None = None,
+    disk_offload_index: dict | None = None,
+    hf_quantizer: HfQuantizer | None = None,
     device_mesh: Optional["torch.distributed.device_mesh.DeviceMesh"] = None,
-) -> tuple[Optional[dict], Optional[dict]]:
+) -> tuple[dict | None, dict | None]:
     """Load parameters from `meta_state_dict` into the model. The parameters of the `meta_state_dict` are on the meta
     device in order to easily infer the shapes and dtypes that they will have. Then proper parameters are then loaded
     from `shard_file`, which is the actual state dict file on disk.
@@ -773,7 +773,7 @@ def load_shard_files_with_threadpool(args_list):
     return error_msgs, disk_offload_index
 
 
-def _add_variant(weights_name: str, variant: Optional[str] = None) -> str:
+def _add_variant(weights_name: str, variant: str | None = None) -> str:
     if variant is not None:
         path, name = weights_name.rsplit(".", 1)
         weights_name = f"{path}.{variant}.{name}"
@@ -815,15 +815,15 @@ def update_key_name(keys):
 
 
 def _get_resolved_checkpoint_files(
-    pretrained_model_name_or_path: Optional[Union[str, os.PathLike]],
-    variant: Optional[str],
-    gguf_file: Optional[str],
-    use_safetensors: Optional[bool],
+    pretrained_model_name_or_path: str | os.PathLike | None,
+    variant: str | None,
+    gguf_file: str | None,
+    use_safetensors: bool | None,
     download_kwargs: DownloadKwargs,
     user_agent: dict,
     is_remote_code: bool,  # Because we can't determine this inside this function, we need it to be passed in
-    transformers_explicit_filename: Optional[str] = None,
-) -> tuple[Optional[list[str]], Optional[dict]]:
+    transformers_explicit_filename: str | None = None,
+) -> tuple[list[str] | None, dict | None]:
     """Get all the checkpoint filenames based on `pretrained_model_name_or_path`, and optional metadata if the
     checkpoints are sharded.
     This function will download the data if necessary.
@@ -1096,13 +1096,13 @@ def _get_resolved_checkpoint_files(
 
 def _get_dtype(
     cls,
-    dtype: Optional[Union[str, torch.dtype, dict]],
-    checkpoint_files: Optional[list[str]],
+    dtype: str | torch.dtype | dict | None,
+    checkpoint_files: list[str] | None,
     config: PreTrainedConfig,
-    sharded_metadata: Optional[dict],
-    state_dict: Optional[dict],
+    sharded_metadata: dict | None,
+    state_dict: dict | None,
     weights_only: bool,
-) -> tuple[PreTrainedConfig, Optional[torch.dtype], Optional[torch.dtype]]:
+) -> tuple[PreTrainedConfig, torch.dtype | None, torch.dtype | None]:
     """Find the correct `dtype` to use based on provided arguments. Also update the `config` based on the
     inferred dtype. We do the following:
     1. If dtype is not None, we use that dtype
@@ -1179,7 +1179,7 @@ def _find_missing_and_unexpected_keys(
     original_checkpoint_keys: list[str],
     checkpoint_keys: list[str],
     loading_base_model_from_task_state_dict: bool,
-    hf_quantizer: Optional[HfQuantizer],
+    hf_quantizer: HfQuantizer | None,
 ) -> tuple[list[str], list[str]]:
     """Find missing keys (keys that are part of the model parameters but were NOT found in the loaded state dict keys) and unexpected keys
     (keys found in the loaded state dict keys, but that are NOT part of the model parameters)
@@ -1219,8 +1219,8 @@ def _find_missing_and_unexpected_keys(
 
 def _find_mismatched_keys(
     model: "PreTrainedModel",
-    state_dict: Optional[dict],
-    checkpoint_files: Optional[list[str]],
+    state_dict: dict | None,
+    checkpoint_files: list[str] | None,
     ignore_mismatched_sizes: bool,
     keys_to_rename_mapping: dict[str, str],
     is_quantized: bool,
@@ -1397,8 +1397,8 @@ class ModuleUtilsMixin:
         self,
         attention_mask: Tensor,
         input_shape: tuple[int, ...],
-        device: Optional[torch.device] = None,
-        dtype: Optional[torch.dtype] = None,
+        device: torch.device | None = None,
+        dtype: torch.dtype | None = None,
     ) -> Tensor:
         """
         Makes broadcastable attention and causal masks so that future and masked tokens are ignored.
@@ -1503,7 +1503,7 @@ class ModuleUtilsMixin:
 
         return sum(total_numel)
 
-    def estimate_tokens(self, input_dict: dict[str, Union[torch.Tensor, Any]]) -> int:
+    def estimate_tokens(self, input_dict: dict[str, torch.Tensor | Any]) -> int:
         """
         Helper function to estimate the total number of tokens from the model inputs.
 
@@ -1524,9 +1524,7 @@ class ModuleUtilsMixin:
             self.warnings_issued["estimate_tokens"] = True
         return 0
 
-    def floating_point_ops(
-        self, input_dict: dict[str, Union[torch.Tensor, Any]], exclude_embeddings: bool = True
-    ) -> int:
+    def floating_point_ops(self, input_dict: dict[str, torch.Tensor | Any], exclude_embeddings: bool = True) -> int:
         """
         Get number of (optionally, non-embeddings) floating-point operations for the forward and backward passes of a
         batch with this transformer model. Default approximation neglects the quadratic dependency on the number of
@@ -1735,7 +1733,7 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
 
     # Attributes used mainly in multimodal LLMs, though all models contain a valid field for these
     # Possible values are: text, image, video, audio and time
-    input_modalities: Union[str, list[str]] = "text"  # most models are text
+    input_modalities: str | list[str] = "text"  # most models are text
 
     @property
     @torch._dynamo.allow_in_graph
@@ -1972,7 +1970,7 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
             # Remove the attribute now that is has been consumed, so it's no saved in the config.
             delattr(self.config, "gradient_checkpointing")
 
-    def add_model_tags(self, tags: Union[list[str], str]) -> None:
+    def add_model_tags(self, tags: list[str] | str) -> None:
         r"""
         Add custom tags into the model that gets pushed to the Hugging Face Hub. Will
         not overwrite existing tags in the model.
@@ -2350,7 +2348,7 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
         return True
 
     def _check_and_adjust_attn_implementation(
-        self, attn_implementation: Optional[str], is_init_check: bool = False
+        self, attn_implementation: str | None, is_init_check: bool = False
     ) -> str:
         """
         Check that the `attn_implementation` exists and is supported by the models, and try to get the kernel from hub if
@@ -2413,7 +2411,7 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
                 lazy_import_flash_attention(applicable_attn_implementation, force_import=True)
         return applicable_attn_implementation
 
-    def get_correct_attn_implementation(self, requested_attention: Optional[str], is_init_check: bool = False) -> str:
+    def get_correct_attn_implementation(self, requested_attention: str | None, is_init_check: bool = False) -> str:
         applicable_attention = "sdpa" if requested_attention is None else requested_attention
         if applicable_attention not in ["eager"] + ALL_ATTENTION_FUNCTIONS.valid_keys():
             message = (
@@ -2465,7 +2463,7 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
             # If no attention layer, assume `True`. Most probably a multimodal model or inherits from existing models
             return True
 
-    def set_attn_implementation(self, attn_implementation: Union[str, dict]):
+    def set_attn_implementation(self, attn_implementation: str | dict):
         """
         Set the requested `attn_implementation` for this model.
 
@@ -2881,8 +2879,8 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
 
     def resize_token_embeddings(
         self,
-        new_num_tokens: Optional[int] = None,
-        pad_to_multiple_of: Optional[int] = None,
+        new_num_tokens: int | None = None,
+        pad_to_multiple_of: int | None = None,
         mean_resizing: bool = True,
     ) -> nn.Embedding:
         """
@@ -2983,8 +2981,8 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
     def _get_resized_embeddings(
         self,
         old_embeddings: nn.Embedding,
-        new_num_tokens: Optional[int] = None,
-        pad_to_multiple_of: Optional[int] = None,
+        new_num_tokens: int | None = None,
+        pad_to_multiple_of: int | None = None,
         mean_resizing: bool = True,
     ) -> nn.Embedding:
         """
@@ -3141,7 +3139,7 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
     def _get_resized_lm_head(
         self,
         old_lm_head: nn.Linear,
-        new_num_tokens: Optional[int] = None,
+        new_num_tokens: int | None = None,
         transposed: bool = False,
         mean_resizing: bool = True,
     ) -> nn.Linear:
@@ -3338,7 +3336,7 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
             f"overwrite this method in the class {self.__class__} in `modeling_{self.__class__.__module__}.py`"
         )
 
-    def get_position_embeddings(self) -> Union[nn.Embedding, tuple[nn.Embedding]]:
+    def get_position_embeddings(self) -> nn.Embedding | tuple[nn.Embedding]:
         raise NotImplementedError(
             f"`get_position_embeddings` is not implemented for {self.__class__}`. To implement it, you should "
             f"overwrite this method in the class {self.__class__} in `modeling_{self.__class__.__module__}.py`"
@@ -3447,15 +3445,15 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
 
     def save_pretrained(
         self,
-        save_directory: Union[str, os.PathLike],
+        save_directory: str | os.PathLike,
         is_main_process: bool = True,
-        state_dict: Optional[dict] = None,
+        state_dict: dict | None = None,
         save_function: Callable = torch.save,
         push_to_hub: bool = False,
-        max_shard_size: Union[int, str] = "5GB",
+        max_shard_size: int | str = "5GB",
         safe_serialization: bool = True,
-        variant: Optional[str] = None,
-        token: Optional[Union[str, bool]] = None,
+        variant: str | None = None,
+        token: str | bool | None = None,
         save_peft_format: bool = True,
         **kwargs,
     ):
@@ -4058,16 +4056,16 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
     @restore_default_dtype
     def from_pretrained(
         cls: type[SpecificPreTrainedModelType],
-        pretrained_model_name_or_path: Optional[Union[str, os.PathLike]],
+        pretrained_model_name_or_path: str | os.PathLike | None,
         *model_args,
-        config: Optional[Union[PreTrainedConfig, str, os.PathLike]] = None,
-        cache_dir: Optional[Union[str, os.PathLike]] = None,
+        config: PreTrainedConfig | str | os.PathLike | None = None,
+        cache_dir: str | os.PathLike | None = None,
         ignore_mismatched_sizes: bool = False,
         force_download: bool = False,
         local_files_only: bool = False,
-        token: Optional[Union[str, bool]] = None,
+        token: str | bool | None = None,
         revision: str = "main",
-        use_safetensors: Optional[bool] = None,
+        use_safetensors: bool | None = None,
         weights_only: bool = True,
         **kwargs,
     ) -> SpecificPreTrainedModelType:
@@ -4570,7 +4568,7 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
     def _get_key_renaming_mapping(
         self,
         checkpoint_keys: list[str],
-        key_mapping: Optional[dict[str, str]] = None,
+        key_mapping: dict[str, str] | None = None,
         loading_base_model_from_task_state_dict: bool = False,
         loading_task_model_from_base_state_dict: bool = False,
     ):
@@ -4661,17 +4659,17 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
     def _load_pretrained_model(
         cls,
         model: "PreTrainedModel",
-        state_dict: Optional[dict],
-        checkpoint_files: Optional[list[str]],
-        pretrained_model_name_or_path: Optional[str],
+        state_dict: dict | None,
+        checkpoint_files: list[str] | None,
+        pretrained_model_name_or_path: str | None,
         ignore_mismatched_sizes: bool = False,
-        sharded_metadata: Optional[dict] = None,
-        device_map: Optional[dict] = None,
-        disk_offload_folder: Optional[str] = None,
-        dtype: Optional[torch.dtype] = None,
-        hf_quantizer: Optional[HfQuantizer] = None,
+        sharded_metadata: dict | None = None,
+        device_map: dict | None = None,
+        disk_offload_folder: str | None = None,
+        dtype: torch.dtype | None = None,
+        hf_quantizer: HfQuantizer | None = None,
         device_mesh: Optional["torch.distributed.device_mesh.DeviceMesh"] = None,
-        key_mapping: Optional[dict[str, str]] = None,
+        key_mapping: dict[str, str] | None = None,
         weights_only: bool = True,
     ):
         # TODO: we should only be calling hf_quantizer.skip_placement or something like that
@@ -5054,7 +5052,7 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
                 )
             self._use_kernels = False
 
-    def get_compiled_call(self, compile_config: Optional[CompileConfig]) -> Callable:
+    def get_compiled_call(self, compile_config: CompileConfig | None) -> Callable:
         """Return a `torch.compile`'d version of `self.__call__`. This is useful to dynamically choose between
         non-compiled/compiled `forward` during inference, especially to switch between prefill (where we don't
         want to use compiled version to avoid recomputing the graph with new shapes) and iterative decoding
@@ -5077,7 +5075,7 @@ class PreTrainedModel(nn.Module, EmbeddingAccessMixin, ModuleUtilsMixin, PushToH
         return cls._supports_attention_backend
 
     def _move_missing_keys_from_meta_to_cpu(
-        self, missing_keys: list[str], dtype: torch.dtype, hf_quantizer: Optional[HfQuantizer]
+        self, missing_keys: list[str], dtype: torch.dtype, hf_quantizer: HfQuantizer | None
     ) -> None:
         """Move the missing keys (keys that are part of the model parameters, but were NOT found in the loaded state dicts) back
         from meta device to cpu.
@@ -5281,7 +5279,7 @@ def unwrap_model(model: nn.Module, recursive: bool = False) -> nn.Module:
             return model
 
 
-def is_accelerator_device(device: Union[str, int, torch.device]) -> bool:
+def is_accelerator_device(device: str | int | torch.device) -> bool:
     """Check if the device is an accelerator. We need to function, as device_map can be "disk" as well, which is not
     a proper `torch.device`.
     """
@@ -5291,7 +5289,7 @@ def is_accelerator_device(device: Union[str, int, torch.device]) -> bool:
         return torch.device(device).type not in ["meta", "cpu"]
 
 
-def caching_allocator_warmup(model: PreTrainedModel, expanded_device_map: dict, hf_quantizer: Optional[HfQuantizer]):
+def caching_allocator_warmup(model: PreTrainedModel, expanded_device_map: dict, hf_quantizer: HfQuantizer | None):
     """This function warm-ups the caching allocator based on the size of the model tensors that will reside on each
     device. It allows to have one large call to Malloc, instead of recursively calling it later when loading
     the model, which is actually the loading speed bottleneck.

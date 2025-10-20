@@ -15,7 +15,6 @@
 from abc import ABC, abstractmethod
 from collections import deque
 from math import ceil
-from typing import Optional
 
 from .requests import logger
 
@@ -28,7 +27,7 @@ class CacheAllocator(ABC):
     _block_table: dict[str, list[int]]  # request_id -> list of block_ids allocated to the request
 
     @abstractmethod
-    def allocate_blocks(self, n_blocks: int, request_id: str, free_blocks: deque[int]) -> Optional[int]:
+    def allocate_blocks(self, n_blocks: int, request_id: str, free_blocks: deque[int]) -> int | None:
         """Allocates n_blocks for a given request_id. Returns the num of blocks allocated if successful and None
         otherwise."""
 
@@ -68,7 +67,7 @@ class FullAttentionCacheAllocator(CacheAllocator):
         self.block_size = block_size
         self._block_table = {}
 
-    def allocate_blocks(self, n_blocks: int, request_id: str, free_blocks: deque[int]) -> Optional[int]:
+    def allocate_blocks(self, n_blocks: int, request_id: str, free_blocks: deque[int]) -> int | None:
         """Allocate blocks for a given request_id. Returns the number of blocks allocated if successful and None
         otherwise. For group of full attention layers, we always allocate the number of requested blocks."""
         if len(free_blocks) < n_blocks:
@@ -131,7 +130,7 @@ class SlidingAttentionCacheAllocator(CacheAllocator):
         self._max_blocks_per_request = ceil(self.sliding_window / self.block_size)
         self._block_table = {}
 
-    def allocate_blocks(self, n_blocks: int, request_id: str, free_blocks: deque[int]) -> Optional[int]:
+    def allocate_blocks(self, n_blocks: int, request_id: str, free_blocks: deque[int]) -> int | None:
         """Allocate blocks for a given request_id. Returns the number of blocks allocated if successful and None
         otherwise. For group of sliding window attention layers, we only allocate up to the point where we can fit an
         entire sliding window in the cache tensor."""

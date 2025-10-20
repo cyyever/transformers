@@ -18,7 +18,6 @@ import pickle
 import random
 import time
 import warnings
-from typing import Optional
 
 import torch
 from filelock import FileLock
@@ -44,7 +43,7 @@ class TextDataset(Dataset):
         file_path: str,
         block_size: int,
         overwrite_cache=False,
-        cache_dir: Optional[str] = None,
+        cache_dir: str | None = None,
     ):
         warnings.warn(
             DEPRECATION_WARNING.format(

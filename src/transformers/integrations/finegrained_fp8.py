@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional
 
 from ..utils import is_accelerate_available, is_torch_accelerator_available, is_torch_available, logging
 
@@ -231,7 +230,7 @@ def w8a8_block_fp8_matmul_compile(
     weight_q: torch.Tensor,  # [out_features, hidden_dim]
     input_scale: torch.Tensor,  # [batch * seq_len, num_input_groups]
     weight_scale: torch.Tensor,  # [num_weight_blocks_m, num_weight_blocks_n]
-    block_size: Optional[tuple[int, int]] = None,  # (M=128, N=128) for weights for example
+    block_size: tuple[int, int] | None = None,  # (M=128, N=128) for weights for example
     output_dtype: torch.dtype = torch.float32,
 ) -> torch.Tensor:
     """
@@ -300,7 +299,7 @@ class FP8Linear(nn.Linear):
         out_features: int,
         bias: bool = False,
         dtype=None,
-        block_size: Optional[tuple[int, int]] = None,
+        block_size: tuple[int, int] | None = None,
         device=None,
         activation_scheme="dynamic",
     ):

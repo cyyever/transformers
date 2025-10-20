@@ -19,7 +19,6 @@ allow to make our dependency on SentencePiece optional.
 """
 
 import warnings
-from typing import Optional
 
 from packaging import version
 from tokenizers import AddedToken, Regex, Tokenizer, decoders, normalizers, pre_tokenizers, processors
@@ -327,9 +326,7 @@ class OpenAIGPTConverter(Converter):
 
 
 class GPT2Converter(Converter):
-    def converted(
-        self, vocab: Optional[dict[str, int]] = None, merges: Optional[list[tuple[str, str]]] = None
-    ) -> Tokenizer:
+    def converted(self, vocab: dict[str, int] | None = None, merges: list[tuple[str, str]] | None = None) -> Tokenizer:
         if not vocab:
             vocab = self.original_tokenizer.encoder
         if not merges:
@@ -398,9 +395,7 @@ class HerbertConverter(Converter):
 
 
 class Qwen2Converter(Converter):
-    def converted(
-        self, vocab: Optional[dict[str, int]] = None, merges: Optional[list[tuple[str, str]]] = None
-    ) -> Tokenizer:
+    def converted(self, vocab: dict[str, int] | None = None, merges: list[tuple[str, str]] | None = None) -> Tokenizer:
         if not vocab:
             vocab = self.original_tokenizer.encoder
         if not merges:

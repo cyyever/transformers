@@ -176,10 +176,10 @@ def dynamic_rope_update(rope_forward):
 
 
 def _compute_linear_scaling_rope_parameters(
-    config: Optional[PreTrainedConfig] = None,
+    config: PreTrainedConfig | None = None,
     device: Optional["torch.device"] = None,
-    seq_len: Optional[int] = None,
-    layer_type: Optional[str] = None,
+    seq_len: int | None = None,
+    layer_type: str | None = None,
 ) -> tuple["torch.Tensor", float]:
     """
     Computes the inverse frequencies with linear scaling. Credits to the Reddit user /u/kaiokendev
@@ -230,10 +230,10 @@ def _compute_linear_scaling_rope_parameters(
 
 
 def _compute_dynamic_ntk_parameters(
-    config: Optional[PreTrainedConfig] = None,
+    config: PreTrainedConfig | None = None,
     device: Optional["torch.device"] = None,
-    seq_len: Optional[int] = None,
-    layer_type: Optional[str] = None,
+    seq_len: int | None = None,
+    layer_type: str | None = None,
 ) -> tuple["torch.Tensor", float]:
     """
     Computes the inverse frequencies with NTK scaling. Credits to the Reddit users /u/bloc97 and /u/emozilla
@@ -304,8 +304,8 @@ def _compute_dynamic_ntk_parameters(
 def _compute_yarn_parameters(
     config: PreTrainedConfig,
     device: "torch.device",
-    seq_len: Optional[int] = None,
-    layer_type: Optional[str] = None,
+    seq_len: int | None = None,
+    layer_type: str | None = None,
 ) -> tuple["torch.Tensor", float]:
     """
     Computes the inverse frequencies with NTK scaling. Please refer to the
@@ -442,8 +442,8 @@ def _compute_yarn_parameters(
 def _compute_longrope_parameters(
     config: PreTrainedConfig,
     device: "torch.device",
-    seq_len: Optional[int] = None,
-    layer_type: Optional[str] = None,
+    seq_len: int | None = None,
+    layer_type: str | None = None,
 ) -> tuple["torch.Tensor", float]:
     """
     Computes the inverse frequencies with LongRoPE scaling. Please refer to the
@@ -532,8 +532,8 @@ def _compute_longrope_parameters(
 def _compute_llama3_parameters(
     config: PreTrainedConfig,
     device: "torch.device",
-    seq_len: Optional[int] = None,
-    layer_type: Optional[str] = None,
+    seq_len: int | None = None,
+    layer_type: str | None = None,
 ) -> tuple["torch.Tensor", float]:
     """
     Computes the inverse frequencies for llama 3.1.
@@ -624,8 +624,8 @@ def _check_received_keys(
     rope_type: str,
     received_keys: set,
     required_keys: set,
-    optional_keys: Optional[set] = None,
-    ignore_keys: Optional[set] = None,
+    optional_keys: set | None = None,
+    ignore_keys: set | None = None,
 ):
     """Compare the received keys in `config.rope_parameters` against the expected and optional keys"""
     # BC: "rope_type" was originally "type" -- let's check for "rope_type" when "type" is present
@@ -650,7 +650,7 @@ def _check_received_keys(
 
 
 def _validate_default_rope_parameters(
-    rope_parameters: dict, config: Optional[PreTrainedConfig] = None, ignore_keys: Optional[set] = None
+    rope_parameters: dict, config: PreTrainedConfig | None = None, ignore_keys: set | None = None
 ):
     required_keys = {"rope_type", "rope_theta"}
     received_keys = set(rope_parameters.keys())
@@ -659,7 +659,7 @@ def _validate_default_rope_parameters(
 
 
 def _validate_linear_scaling_rope_parameters(
-    rope_parameters: dict, config: Optional[PreTrainedConfig] = None, ignore_keys: Optional[set] = None
+    rope_parameters: dict, config: PreTrainedConfig | None = None, ignore_keys: set | None = None
 ):
     required_keys = {"rope_type", "factor", "rope_theta"}
     received_keys = set(rope_parameters.keys())
@@ -672,7 +672,7 @@ def _validate_linear_scaling_rope_parameters(
 
 
 def _validate_dynamic_scaling_rope_parameters(
-    rope_parameters: dict, config: Optional[PreTrainedConfig] = None, ignore_keys: Optional[set] = None
+    rope_parameters: dict, config: PreTrainedConfig | None = None, ignore_keys: set | None = None
 ):
     # TODO (joao): update logic for the inclusion of `original_max_position_embeddings`
     optional_keys = {"original_max_position_embeddings"}
@@ -687,7 +687,7 @@ def _validate_dynamic_scaling_rope_parameters(
 
 
 def _validate_yarn_parameters(
-    rope_parameters: dict, config: Optional[PreTrainedConfig] = None, ignore_keys: Optional[set] = None
+    rope_parameters: dict, config: PreTrainedConfig | None = None, ignore_keys: set | None = None
 ):
     required_keys = {"rope_type", "factor", "rope_theta"}
     optional_keys = {
@@ -752,7 +752,7 @@ def _validate_yarn_parameters(
         )
 
 
-def _validate_longrope_parameters(rope_parameters: dict, config: PreTrainedConfig, ignore_keys: Optional[set] = None):
+def _validate_longrope_parameters(rope_parameters: dict, config: PreTrainedConfig, ignore_keys: set | None = None):
     required_keys = {"rope_type", "short_factor", "long_factor", "rope_theta"}
     # TODO (joao): update logic for the inclusion of `original_max_position_embeddings`
     optional_keys = {"attention_factor", "factor", "original_max_position_embeddings"}
@@ -801,7 +801,7 @@ def _validate_longrope_parameters(rope_parameters: dict, config: PreTrainedConfi
                 )
 
 
-def _validate_llama3_parameters(rope_parameters: dict, config: PreTrainedConfig, ignore_keys: Optional[set] = None):
+def _validate_llama3_parameters(rope_parameters: dict, config: PreTrainedConfig, ignore_keys: set | None = None):
     required_keys = {
         "rope_type",
         "factor",
@@ -854,7 +854,7 @@ ROPE_VALIDATION_FUNCTIONS = {
 }
 
 
-def rope_config_validation(config: PreTrainedConfig, ignore_keys: Optional[set] = None):
+def rope_config_validation(config: PreTrainedConfig, ignore_keys: set | None = None):
     """
     Validate the RoPE config arguments, given a `PreTrainedConfig` object
     """
@@ -925,13 +925,13 @@ class RopeParameters(TypedDict):
     """
 
     rope_theta: float
-    rope_type: Optional[str]
-    factor: Optional[float]
-    original_max_position_embeddings: Optional[int]
-    attention_factor: Optional[float]
-    beta_fast: Optional[float]
-    beta_slow: Optional[float]
-    short_factor: Optional[list[float]]
-    long_factor: Optional[list[float]]
-    low_freq_factor: Optional[float]
-    high_freq_factor: Optional[float]
+    rope_type: str | None
+    factor: float | None
+    original_max_position_embeddings: int | None
+    attention_factor: float | None
+    beta_fast: float | None
+    beta_slow: float | None
+    short_factor: list[float] | None
+    long_factor: list[float] | None
+    low_freq_factor: float | None
+    high_freq_factor: float | None

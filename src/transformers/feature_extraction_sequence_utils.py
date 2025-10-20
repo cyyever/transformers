@@ -15,8 +15,6 @@
 Sequence feature extraction class for common feature extractors to preprocess sequences.
 """
 
-from typing import Optional, Union
-
 import numpy as np
 
 from .feature_extraction_utils import BatchFeature, FeatureExtractionMixin
@@ -51,19 +49,17 @@ class SequenceFeatureExtractor(FeatureExtractionMixin):
 
     def pad(
         self,
-        processed_features: Union[
-            BatchFeature,
-            list[BatchFeature],
-            dict[str, BatchFeature],
-            dict[str, list[BatchFeature]],
-            list[dict[str, BatchFeature]],
-        ],
-        padding: Union[bool, str, PaddingStrategy] = True,
-        max_length: Optional[int] = None,
+        processed_features: BatchFeature
+        | list[BatchFeature]
+        | dict[str, BatchFeature]
+        | dict[str, list[BatchFeature]]
+        | list[dict[str, BatchFeature]],
+        padding: bool | str | PaddingStrategy = True,
+        max_length: int | None = None,
         truncation: bool = False,
-        pad_to_multiple_of: Optional[int] = None,
-        return_attention_mask: Optional[bool] = None,
-        return_tensors: Optional[Union[str, TensorType]] = None,
+        pad_to_multiple_of: int | None = None,
+        return_attention_mask: bool | None = None,
+        return_tensors: str | TensorType | None = None,
     ) -> BatchFeature:
         """
         Pad input values / input vectors or a batch of input values / input vectors up to predefined length or to the
@@ -222,11 +218,11 @@ class SequenceFeatureExtractor(FeatureExtractionMixin):
 
     def _pad(
         self,
-        processed_features: Union[dict[str, np.ndarray], BatchFeature],
-        max_length: Optional[int] = None,
+        processed_features: dict[str, np.ndarray] | BatchFeature,
+        max_length: int | None = None,
         padding_strategy: PaddingStrategy = PaddingStrategy.DO_NOT_PAD,
-        pad_to_multiple_of: Optional[int] = None,
-        return_attention_mask: Optional[bool] = None,
+        pad_to_multiple_of: int | None = None,
+        return_attention_mask: bool | None = None,
     ) -> dict:
         """
         Pad inputs (on left/right and up to predefined length or max length in the batch)
@@ -294,10 +290,10 @@ class SequenceFeatureExtractor(FeatureExtractionMixin):
 
     def _truncate(
         self,
-        processed_features: Union[dict[str, np.ndarray], BatchFeature],
-        max_length: Optional[int] = None,
-        pad_to_multiple_of: Optional[int] = None,
-        truncation: Optional[bool] = None,
+        processed_features: dict[str, np.ndarray] | BatchFeature,
+        max_length: int | None = None,
+        pad_to_multiple_of: int | None = None,
+        truncation: bool | None = None,
     ):
         """
         Truncate inputs to predefined length or max length in the batch

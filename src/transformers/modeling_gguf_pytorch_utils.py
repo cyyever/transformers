@@ -14,7 +14,7 @@
 # limitations under the License.
 
 import re
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
 import numpy as np
 from tqdm.auto import tqdm
@@ -84,7 +84,7 @@ class LlamaTensorProcessor(TensorProcessor):
         return GGUFTensor(weights, name, {})
 
     def _reverse_permute_weights(
-        self, weights: np.ndarray, n_head: int, num_kv_heads: Optional[int] = None
+        self, weights: np.ndarray, n_head: int, num_kv_heads: int | None = None
     ) -> np.ndarray:
         # Original permutation implementation
         # https://github.com/ggerganov/llama.cpp/blob/a38b884c6c4b0c256583acfaaabdf556c62fabea/convert_hf_to_gguf.py#L1402-L1408
@@ -280,8 +280,8 @@ def read_field(reader, field):
 # modified from https://github.com/vllm-project/vllm/blob/v0.6.4.post1/vllm/model_executor/model_loader/loader.py#L1115-L1147
 def get_gguf_hf_weights_map(
     hf_model,
-    model_type: Optional[str] = None,
-    num_layers: Optional[int] = None,
+    model_type: str | None = None,
+    num_layers: int | None = None,
     qual_name: str = "",
 ):
     """

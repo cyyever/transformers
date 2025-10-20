@@ -15,7 +15,6 @@ import re
 from collections.abc import Callable
 from functools import partial
 from types import ModuleType
-from typing import Optional, Union
 
 from ..modeling_flash_attention_utils import lazy_import_flash_attention
 from ..utils import logging
@@ -37,7 +36,7 @@ try:
 
     _kernels_available = True
 
-    _KERNEL_MAPPING: dict[str, dict[Union[Device, str], LayerRepository]] = {
+    _KERNEL_MAPPING: dict[str, dict[Device | str, LayerRepository]] = {
         "MultiScaleDeformableAttention": {
             "cuda": LayerRepository(
                 repo_id="kernels-community/deformable-detr",
@@ -166,10 +165,10 @@ _HUB_KERNEL_MAPPING: dict[str, str] = {
     "causal-conv1d": "kernels-community/causal-conv1d",
 }
 
-_KERNEL_MODULE_MAPPING: dict[str, Optional[ModuleType]] = {}
+_KERNEL_MODULE_MAPPING: dict[str, ModuleType | None] = {}
 
 
-def is_kernel(attn_implementation: Optional[str]) -> bool:
+def is_kernel(attn_implementation: str | None) -> bool:
     """Check whether `attn_implementation` matches a kernel pattern from the hub."""
     return (
         attn_implementation is not None
@@ -177,7 +176,7 @@ def is_kernel(attn_implementation: Optional[str]) -> bool:
     )
 
 
-def load_and_register_attn_kernel(attn_implementation: str, attention_wrapper: Optional[Callable] = None) -> None:
+def load_and_register_attn_kernel(attn_implementation: str, attention_wrapper: Callable | None = None) -> None:
     """
     Load and register the kernel associated to `attn_implementation`.
 
@@ -231,7 +230,7 @@ def load_and_register_attn_kernel(attn_implementation: str, attention_wrapper: O
     ALL_MASK_ATTENTION_FUNCTIONS.register(attn_implementation, ALL_MASK_ATTENTION_FUNCTIONS["flash_attention_2"])
 
 
-def lazy_load_kernel(kernel_name: str, mapping: dict[str, Optional[ModuleType]] = _KERNEL_MODULE_MAPPING):
+def lazy_load_kernel(kernel_name: str, mapping: dict[str, ModuleType | None] = _KERNEL_MODULE_MAPPING):
     if kernel_name in mapping and isinstance(mapping[kernel_name], ModuleType):
         return mapping[kernel_name]
     if kernel_name not in _HUB_KERNEL_MAPPING:

@@ -62,8 +62,8 @@ class PatchingSpec:
     o: Any
     name: str
     custom_op: Callable
-    orig_op: Optional[Callable] = None
-    op_wrapper: Optional[Callable] = None
+    orig_op: Callable | None = None
+    op_wrapper: Callable | None = None
 
 
 class OnnxConfig(ABC):
@@ -110,7 +110,7 @@ class OnnxConfig(ABC):
     }
 
     def __init__(
-        self, config: "PreTrainedConfig", task: str = "default", patching_specs: Optional[list[PatchingSpec]] = None
+        self, config: "PreTrainedConfig", task: str = "default", patching_specs: list[PatchingSpec] | None = None
     ):
         self._config = config
 
@@ -163,7 +163,7 @@ class OnnxConfig(ABC):
         return copy.deepcopy(common_outputs)
 
     @property
-    def values_override(self) -> Optional[Mapping[str, Any]]:
+    def values_override(self) -> Mapping[str, Any] | None:
         """
         Dictionary of keys to override in the model's config before exporting
 
@@ -445,7 +445,7 @@ class OnnxConfigWithPast(OnnxConfig, ABC):
         self,
         config: "PreTrainedConfig",
         task: str = "default",
-        patching_specs: Optional[list[PatchingSpec]] = None,
+        patching_specs: list[PatchingSpec] | None = None,
         use_past: bool = False,
     ):
         super().__init__(config, task=task, patching_specs=patching_specs)
@@ -473,7 +473,7 @@ class OnnxConfigWithPast(OnnxConfig, ABC):
         return common_outputs
 
     @property
-    def values_override(self) -> Optional[Mapping[str, Any]]:
+    def values_override(self) -> Mapping[str, Any] | None:
         if hasattr(self._config, "use_cache"):
             return {"use_cache": self.use_past}
 

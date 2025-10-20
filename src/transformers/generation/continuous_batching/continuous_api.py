@@ -21,7 +21,6 @@ from functools import partial
 from itertools import count
 from math import ceil
 from time import perf_counter
-from typing import Optional, Union
 
 import torch
 from torch import nn
@@ -158,7 +157,7 @@ def build_attention_mask(
 @dataclass
 class PagedAttentionArgs:
     input_ids: torch.Tensor
-    attention_mask: Optional[torch.Tensor]
+    attention_mask: torch.Tensor | None
     position_ids: torch.Tensor
     cumulative_seqlens_q: torch.Tensor
     cumulative_seqlens_k: torch.Tensor
@@ -220,7 +219,7 @@ class ContinuousBatchProcessor:
         # Accumulator for batch scheduling
         self.requests_in_batch: list[RequestState] = []
         # Cuda graphs for the generation step
-        self._graphs: Optional[dict[tuple[int, int], torch.cuda.CUDAGraph]] = {} if use_cuda_graph else None
+        self._graphs: dict[tuple[int, int], torch.cuda.CUDAGraph] | None = {} if use_cuda_graph else None
 
         # Set up metrics collector
         self.max_batch_tokens = cache.max_batch_tokens
@@ -517,7 +516,7 @@ class ContinuousBatchProcessor:
         read_index: list[list[int]],
         write_index: list[list[int]],
         cumulative_seqlens_q: list[int],
-        cumulative_seqlens_k: Union[list[int], dict[str, list[int]]],
+        cumulative_seqlens_k: list[int] | dict[str, list[int]],
         logits_indices: list[int],
     ) -> None:
         """Builds the actual tensors for the current batch, by modifying the already allocated tensors in place."""
@@ -762,10 +761,10 @@ class ContinuousBatchingManager:
         self.model.generation_config.top_p = None
         self.do_sample = getattr(generation_config, "do_sample", True)
         self.logit_processor = self.model._get_logits_processor(generation_config)
-        use_cuda_graph: Optional[bool] = getattr(generation_config, "use_cuda_graph", None)
+        use_cuda_graph: bool | None = getattr(generation_config, "use_cuda_graph", None)
         self.profile = getattr(generation_config, "profile", False)  # TODO: not supported yet
         self.manual_eviction = manual_eviction
-        self.batch_processor: Optional[ContinuousBatchProcessor] = None
+        self.batch_processor: ContinuousBatchProcessor | None = None
 
         # If a number of cuda graphs was specified for either Q or KV, we activate cuda graphs
         if num_q_cuda_graphs > 0 or num_kv_cuda_graphs > 0:
@@ -807,7 +806,7 @@ class ContinuousBatchingManager:
         """Check if the background generation thread is running."""
         return self._generation_thread is not None and self._generation_thread.is_alive()
 
-    def stop(self, block: bool = False, timeout: Optional[float] = None) -> None:
+    def stop(self, block: bool = False, timeout: float | None = None) -> None:
         """Signal the background thread to stop.
 
         Args:
@@ -825,7 +824,7 @@ class ContinuousBatchingManager:
         if block:
             self.join(timeout)
 
-    def join(self, timeout: Optional[float] = None) -> None:
+    def join(self, timeout: float | None = None) -> None:
         """Wait for the background thread to finish.
 
         Args:
@@ -842,8 +841,8 @@ class ContinuousBatchingManager:
     def add_request(
         self,
         input_ids: list[int],
-        request_id: Optional[str] = None,
-        max_new_tokens: Optional[int] = None,
+        request_id: str | None = None,
+        max_new_tokens: int | None = None,
         streaming: bool = False,
     ) -> str:
         """Add a new generation request to the queue.
@@ -877,7 +876,7 @@ class ContinuousBatchingManager:
         self.input_queue.put(state, block=True, timeout=10)  # XXX: pass timeout as fn arg?
         return request_id
 
-    def add_requests(self, inputs: list[list[int]], max_new_tokens: Optional[int] = None) -> None:
+    def add_requests(self, inputs: list[list[int]], max_new_tokens: int | None = None) -> None:
         for input_ids in inputs:
             self.add_request(input_ids, max_new_tokens=max_new_tokens)
 
@@ -890,9 +889,7 @@ class ContinuousBatchingManager:
         if self.batch_processor is not None:
             self.batch_processor.scheduler.set_request_cancellation(request_id)
 
-    def get_result(
-        self, request_id: Optional[str] = None, timeout: Optional[float] = None
-    ) -> Optional[GenerationOutput]:
+    def get_result(self, request_id: str | None = None, timeout: float | None = None) -> GenerationOutput | None:
         """Retrieve one result from the output queue.
 
         Args:
@@ -950,7 +947,7 @@ class ContinuousBatchingManager:
 
     def _run_generation_loop(self) -> None:
         """Main processing loop running in the background thread."""
-        batch_processor: Optional[ContinuousBatchProcessor] = None
+        batch_processor: ContinuousBatchProcessor | None = None
         try:
             t0 = perf_counter()
             paged_attention_cache = PagedAttentionCache(
@@ -1020,7 +1017,7 @@ class ContinuousBatchingManager:
         batch_processor.update_batch()
 
     @traced
-    def _handle_critical_error(self, error: Exception, batch_processor: Optional[ContinuousBatchProcessor]) -> None:
+    def _handle_critical_error(self, error: Exception, batch_processor: ContinuousBatchProcessor | None) -> None:
         """Handle critical errors that terminate the generation loop."""
         # Signal stop
         self.stop_event.set()
@@ -1052,7 +1049,7 @@ class ContinuousMixin:
 
     def init_continuous_batching(
         self,
-        generation_config: Optional[GenerationConfig] = None,
+        generation_config: GenerationConfig | None = None,
         manual_eviction: bool = False,
         max_queue_size: int = 0,
         num_q_cuda_graphs: int = 0,
@@ -1096,7 +1093,7 @@ class ContinuousMixin:
     def generate_batch(
         self,
         inputs: list[list[int]],
-        generation_config: Optional[GenerationConfig] = None,
+        generation_config: GenerationConfig | None = None,
         progress_bar: bool = True,
         num_q_cuda_graphs: int = 0,
         num_kv_cuda_graphs: int = 0,

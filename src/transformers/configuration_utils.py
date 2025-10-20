@@ -18,7 +18,7 @@ import copy
 import json
 import os
 import warnings
-from typing import TYPE_CHECKING, Any, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from packaging import version
 
@@ -182,10 +182,10 @@ class PreTrainedConfig(PushToHubMixin):
     sub_configs: dict[str, type["PreTrainedConfig"]] = {}
     has_no_defaults_at_init: bool = False
     attribute_map: dict[str, str] = {}
-    base_model_tp_plan: Optional[dict[str, Any]] = None
-    base_model_pp_plan: Optional[dict[str, tuple[list[str]]]] = None
-    base_model_ep_plan: Optional[dict[str, tuple[list[str]]]] = None
-    _auto_class: Optional[str] = None
+    base_model_tp_plan: dict[str, Any] | None = None
+    base_model_pp_plan: dict[str, tuple[list[str]]] | None = None
+    base_model_ep_plan: dict[str, tuple[list[str]]] | None = None
+    _auto_class: str | None = None
 
     def __setattr__(self, key, value):
         if key in super().__getattribute__("attribute_map"):
@@ -204,31 +204,31 @@ class PreTrainedConfig(PushToHubMixin):
         output_hidden_states: bool = False,
         output_attentions: bool = False,
         return_dict: bool = True,
-        dtype: Optional[Union[str, "torch.dtype"]] = None,
+        dtype: Union[str, "torch.dtype"] | None = None,
         # Common arguments
         tie_word_embeddings: bool = True,
         chunk_size_feed_forward: int = 0,
         is_encoder_decoder: bool = False,
         is_decoder: bool = False,
-        cross_attention_hidden_size: Optional[int] = None,
+        cross_attention_hidden_size: int | None = None,
         add_cross_attention: bool = False,
         tie_encoder_decoder: bool = False,
         # Fine-tuning task arguments
-        architectures: Optional[list[str]] = None,
-        finetuning_task: Optional[str] = None,
-        id2label: Optional[dict[int, str]] = None,
-        label2id: Optional[dict[str, int]] = None,
-        num_labels: Optional[int] = None,
-        task_specific_params: Optional[dict[str, Any]] = None,
-        problem_type: Optional[str] = None,
+        architectures: list[str] | None = None,
+        finetuning_task: str | None = None,
+        id2label: dict[int, str] | None = None,
+        label2id: dict[str, int] | None = None,
+        num_labels: int | None = None,
+        task_specific_params: dict[str, Any] | None = None,
+        problem_type: str | None = None,
         # Tokenizer kwargs
-        tokenizer_class: Optional[str] = None,
-        prefix: Optional[str] = None,
-        bos_token_id: Optional[int] = None,
-        pad_token_id: Optional[int] = None,
-        eos_token_id: Optional[int] = None,
-        sep_token_id: Optional[int] = None,
-        decoder_start_token_id: Optional[int] = None,
+        tokenizer_class: str | None = None,
+        prefix: str | None = None,
+        bos_token_id: int | None = None,
+        pad_token_id: int | None = None,
+        eos_token_id: int | None = None,
+        sep_token_id: int | None = None,
+        decoder_start_token_id: int | None = None,
         **kwargs,
     ):
         # Validation for some arguments
@@ -338,7 +338,7 @@ class PreTrainedConfig(PushToHubMixin):
         self.label2id = dict(zip(self.id2label.values(), self.id2label.keys()))
 
     @property
-    def name_or_path(self) -> Optional[str]:
+    def name_or_path(self) -> str | None:
         return getattr(self, "_name_or_path", None)
 
     @name_or_path.setter
@@ -1285,7 +1285,7 @@ ALLOWED_LAYER_TYPES = (
 )
 
 
-def layer_type_validation(layer_types: list[str], num_hidden_layers: Optional[int] = None):
+def layer_type_validation(layer_types: list[str], num_hidden_layers: int | None = None):
     """Check that `layer_types` is correctly defined."""
     if not all(layer_type in ALLOWED_LAYER_TYPES for layer_type in layer_types):
         raise ValueError(f"The `layer_types` entries must be in {ALLOWED_LAYER_TYPES}")
