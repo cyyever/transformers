@@ -593,7 +593,7 @@ class Message:
                     prev_ci_artifacts=prev_ci_artifacts, with_header=False
                 )
 
-            # To save the list of new model failures and uploaed to hub repositories
+            # To save the list of new model failures and uploaded to hub repositories
             extra_blocks = self.get_new_model_failure_blocks(prev_ci_artifacts=prev_ci_artifacts, to_truncate=False)
             if extra_blocks:
                 filename = "new_failures"

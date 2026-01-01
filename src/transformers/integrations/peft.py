@@ -327,7 +327,7 @@ class PeftAdapterMixin:
                     config=peft_config,
                 )
             except Exception as e:
-                logger.error(f"Hotswapping {adapter_name} was unsucessful with the following error: \n{e}")
+                logger.error(f"Hotswapping {adapter_name} was unsuccessful with the following error: \n{e}")
                 raise
             incompatible_keys = None
 
