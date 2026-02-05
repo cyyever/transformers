@@ -571,13 +571,11 @@ class GenerationMixin(ContinuousMixin):
                         torch.cond(
                             cache_position[-1] >= input_ids.shape[1],
                             branch_2,
-                            lambda input_ids, cache_position: (
-                                torch.cond(
-                                    input_ids.shape[1] != cache_position.shape[0],
-                                    branch_3,
-                                    (lambda input_ids, cache_position: input_ids.clone()),
-                                    [input_ids, cache_position],
-                                )
+                            lambda input_ids, cache_position: torch.cond(
+                                input_ids.shape[1] != cache_position.shape[0],
+                                branch_3,
+                                (lambda input_ids, cache_position: input_ids.clone()),
+                                [input_ids, cache_position],
                             ),
                             [input_ids, cache_position],
                         ),
