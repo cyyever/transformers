@@ -49,7 +49,6 @@ is_torch_greater_or_equal_than_1_12 = is_torch_greater_or_equal("1.12", accept_d
 _torch_distributed_available = torch.distributed.is_available()
 
 
-
 def prune_linear_layer(layer: nn.Linear, index: torch.LongTensor, dim: int = 0) -> nn.Linear:
     """
     Prune a linear layer to keep only entries in index.
@@ -189,7 +188,6 @@ def apply_chunking_to_forward(
         return torch.cat(output_chunks, dim=chunk_dim)
 
     return forward_fn(*input_tensors)
-
 
 
 def id_tensor_storage(tensor: torch.Tensor) -> tuple[torch.device, int, int]:
