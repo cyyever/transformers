@@ -27,11 +27,6 @@ from .core_model_loading import (
     WeightConverter,
     WeightRenaming,
 )
-from .utils import is_torch_available
-
-
-if is_torch_available():
-    import torch
 
 
 if TYPE_CHECKING:

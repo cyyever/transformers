@@ -27,7 +27,6 @@ from ... import initialization as init
 from ...activations import ACT2FN
 from ...modeling_layers import GradientCheckpointingLayer
 from ...modeling_utils import PreTrainedModel
-
 from ...utils import ModelOutput, auto_docstring, logging, torch_int
 from .configuration_donut_swin import DonutSwinConfig
 

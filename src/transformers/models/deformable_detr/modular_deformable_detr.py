@@ -27,7 +27,6 @@ from ...integrations import use_kernel_forward_from_hub
 from ...modeling_outputs import BaseModelOutput
 from ...modeling_utils import PreTrainedModel
 from ...processing_utils import Unpack
-
 from ...utils import (
     ModelOutput,
     TensorType,

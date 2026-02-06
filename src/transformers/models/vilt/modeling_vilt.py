@@ -33,7 +33,6 @@ from ...modeling_outputs import (
     TokenClassifierOutput,
 )
 from ...modeling_utils import PreTrainedModel
-
 from ...utils import auto_docstring, logging
 from .configuration_vilt import ViltConfig
 

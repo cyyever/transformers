@@ -1262,12 +1262,7 @@ def is_torchdynamo_compiling() -> bool:
 
         return torch.compiler.is_compiling()
     except Exception:
-        try:
-            import torch._dynamo as dynamo
-
-            return dynamo.is_compiling()
-        except Exception:
-            return False
+        return False
 
 
 def is_torchdynamo_exporting() -> bool:

@@ -29,7 +29,6 @@ from ...file_utils import ModelOutput
 from ...modeling_layers import GradientCheckpointingLayer
 from ...modeling_outputs import BackboneOutput
 from ...modeling_utils import PreTrainedModel
-
 from ...utils import auto_docstring, torch_int
 from .configuration_maskformer_swin import MaskFormerSwinConfig
 

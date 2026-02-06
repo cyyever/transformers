@@ -31,7 +31,6 @@ from ...backbone_utils import load_backbone
 from ...file_utils import ModelOutput
 from ...integrations import use_kernel_forward_from_hub
 from ...modeling_utils import PreTrainedModel
-
 from ...utils import auto_docstring, torch_compilable_check
 from ..auto.modeling_auto import AutoModel
 from .configuration_mm_grounding_dino import MMGroundingDinoConfig
