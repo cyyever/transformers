@@ -447,6 +447,7 @@ CONFIG_MAPPING_NAMES = OrderedDict[str, str](
         ("univnet", "UnivNetConfig"),
         ("upernet", "UperNetConfig"),
         ("vaultgemma", "VaultGemmaConfig"),
+        ("vibevoice_acoustic_tokenizer", "VibeVoiceAcousticTokenizerConfig"),
         ("video_llama_3", "VideoLlama3Config"),
         ("video_llama_3_vision", "VideoLlama3VisionConfig"),
         ("video_llava", "VideoLlavaConfig"),
@@ -937,6 +938,7 @@ MODEL_NAMES_MAPPING = OrderedDict[str, str](
         ("univnet", "UnivNet"),
         ("upernet", "UPerNet"),
         ("vaultgemma", "VaultGemma"),
+        ("vibevoice_acoustic_tokenizer", "VibeVoiceAcousticTokenizer"),
         ("video_llama_3", "VideoLlama3"),
         ("video_llama_3_vision", "VideoLlama3Vision"),
         ("video_llava", "VideoLlava"),
@@ -1419,17 +1421,10 @@ class AutoConfig:
                     "`pip install git+https://github.com/huggingface/transformers.git`"
                 )
             return config_class.from_dict(config_dict, **unused_kwargs)
-        else:
-            # Fallback: use pattern matching on the string.
-            # We go from longer names to shorter names to catch roberta before bert (for instance)
-            for pattern in sorted(CONFIG_MAPPING.keys(), key=len, reverse=True):
-                if pattern in str(pretrained_model_name_or_path):
-                    return CONFIG_MAPPING[pattern].from_dict(config_dict, **unused_kwargs)
 
         raise ValueError(
             f"Unrecognized model in {pretrained_model_name_or_path}. "
-            f"Should have a `model_type` key in its {CONFIG_NAME}, or contain one of the following strings "
-            f"in its name: {', '.join(CONFIG_MAPPING.keys())}"
+            f"Should have a `model_type` key in its {CONFIG_NAME}."
         )
 
     @staticmethod
