@@ -206,18 +206,21 @@ def upload_original_ckpts(model_name):
     hf_repo = HUB_MODELS[model_name]
     original_ckpt = S3_MODELS[model_name]
     print(f"Uploading original checkpoint for vjepa2 {model_name} to {hf_repo}/original/")
-    with tempfile.NamedTemporaryFile() as fn:
-        local_path = fn.name
-        torch.hub.download_url_to_file(original_ckpt, local_path)
+    tmp = tempfile.NamedTemporaryFile(delete=False)
+    tmp.close()
+    try:
+        torch.hub.download_url_to_file(original_ckpt, tmp.name)
         api = HfApi()
         api.upload_file(
             repo_id=hf_repo,
-            path_or_fileobj=local_path,
+            path_or_fileobj=tmp.name,
             path_in_repo="original/model.pth",
             repo_type="model",
             token=TOKEN,
         )
         print("Uploading complete")
+    finally:
+        os.unlink(tmp.name)
 
 
 @torch.no_grad()

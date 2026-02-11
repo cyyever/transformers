@@ -3710,10 +3710,10 @@ def patch_testing_methods_to_collect_info():
 
 def torchrun(script: str, nproc_per_node: int, is_torchrun: bool = True, env: dict | None = None):
     """Run the `script` using `torchrun` command for multi-processing in a subprocess. Captures errors as necessary."""
-    with tempfile.NamedTemporaryFile(mode="w+", suffix=".py") as tmp:
+    tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False)
+    try:
         tmp.write(script)
-        tmp.flush()
-        tmp.seek(0)
+        tmp.close()
         if is_torchrun:
             cmd = (
                 f"torchrun --nproc_per_node {nproc_per_node} --master_port {get_torch_dist_unique_port()} {tmp.name}"
@@ -3726,6 +3726,8 @@ def torchrun(script: str, nproc_per_node: int, is_torchrun: bool = True, env: di
             _ = subprocess.run(cmd, capture_output=True, env=env, text=True, check=True)
         except subprocess.CalledProcessError as e:
             raise Exception(f"The following error was captured: {e.stderr}")
+    finally:
+        os.unlink(tmp.name)
 
 
 def _format_tensor(t, indent_level=0, sci_mode=None):

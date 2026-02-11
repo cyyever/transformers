@@ -15,6 +15,7 @@
 
 import argparse
 import json
+import os
 import tempfile
 
 import torch
@@ -334,11 +335,13 @@ def convert_checkpoint(
         _pad = symbols[0]
         phonemize = False
 
-    with tempfile.NamedTemporaryFile() as tf:
-        with open(tf.name, "w", encoding="utf-8") as f:
-            f.write(json.dumps(symbol_to_id, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
-
+    tf = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8")
+    try:
+        tf.write(json.dumps(symbol_to_id, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+        tf.close()
         tokenizer = VitsTokenizer(tf.name, language=language, phonemize=phonemize, is_uroman=is_uroman, pad_token=_pad)
+    finally:
+        os.unlink(tf.name)
 
     config.vocab_size = len(symbols)
     model = VitsModel(config)
