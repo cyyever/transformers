@@ -417,8 +417,7 @@ class UMT5Block(GradientCheckpointingLayer):
 
         # clamp inf values to enable fp16 training
         if hidden_states.dtype == torch.float16:
-            max_dtype = torch.finfo(hidden_states.dtype).max
-            clamp_value = torch.where(torch.isinf(hidden_states).any(), max_dtype - 1000, max_dtype)
+            clamp_value = torch.finfo(hidden_states.dtype).max - 1000
             hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
 
         # Cross-Attention Block
@@ -434,8 +433,7 @@ class UMT5Block(GradientCheckpointingLayer):
             )
             # clamp inf values to enable fp16 training
             if hidden_states.dtype == torch.float16:
-                max_dtype = torch.finfo(hidden_states.dtype).max
-                clamp_value = torch.where(torch.isinf(hidden_states).any(), max_dtype - 1000, max_dtype)
+                clamp_value = torch.finfo(hidden_states.dtype).max - 1000
                 hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
 
         # Apply Feed Forward layer
@@ -443,8 +441,7 @@ class UMT5Block(GradientCheckpointingLayer):
 
         # clamp inf values to enable fp16 training
         if hidden_states.dtype == torch.float16:
-            max_dtype = torch.finfo(hidden_states.dtype).max
-            clamp_value = torch.where(torch.isinf(hidden_states).any(), max_dtype - 1000, max_dtype)
+            clamp_value = torch.finfo(hidden_states.dtype).max - 1000
             hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
 
         outputs = (hidden_states,)

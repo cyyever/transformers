@@ -900,9 +900,8 @@ class RTDetrV2EncoderLayer(nn.Module):
             hidden_states = self.final_layer_norm(hidden_states)
 
         if self.training:
-            if not torch.isfinite(hidden_states).all():
-                clamp_value = torch.finfo(hidden_states.dtype).max - 1000
-                hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
+            clamp_value = torch.finfo(hidden_states.dtype).max - 1000
+            hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
 
         return hidden_states
 

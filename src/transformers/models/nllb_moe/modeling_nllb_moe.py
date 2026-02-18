@@ -553,7 +553,7 @@ class NllbMoeEncoderLayer(GradientCheckpointingLayer):
             hidden_states = self.ffn(hidden_states)
         hidden_states = self.ff_dropout(hidden_states)
         hidden_states = residual + hidden_states
-        if hidden_states.dtype == torch.float16 and not torch.isfinite(hidden_states).all():
+        if hidden_states.dtype == torch.float16:
             clamp_value = torch.finfo(hidden_states.dtype).max - 1000
             hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
         return hidden_states
@@ -643,7 +643,7 @@ class NllbMoeDecoderLayer(GradientCheckpointingLayer):
         hidden_states = residual + hidden_states
 
         # clamp inf values to enable fp16 training
-        if hidden_states.dtype == torch.float16 and torch.isinf(hidden_states).any():
+        if hidden_states.dtype == torch.float16:
             clamp_value = torch.finfo(hidden_states.dtype).max - 1000
             hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
 

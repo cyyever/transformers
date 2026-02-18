@@ -664,7 +664,7 @@ class AutoformerEncoderLayer(GradientCheckpointingLayer):
         hidden_states, _ = self.decomp2(hidden_states)
         hidden_states = self.final_layer_norm(hidden_states)
 
-        if hidden_states.dtype == torch.float16 and not torch.isfinite(hidden_states).all():
+        if hidden_states.dtype == torch.float16:
             clamp_value = torch.finfo(hidden_states.dtype).max - 1000
             hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
 
