@@ -3775,6 +3775,10 @@ class GenerationMixin(ContinuousMixin):
                     model_kwargs["position_ids"] = position_ids[:, past_length:current_length]
                 model_inputs = self.prepare_inputs_for_generation(input_chunk, **model_kwargs)
 
+                # Delete previous outputs to free intermediate logits (can be large: chunk_size × vocab × 4B)
+                if "outputs" in locals():
+                    del outputs
+
                 outputs = model_forward(**model_inputs, return_dict=True)
 
                 model_kwargs["past_key_values"] = outputs.past_key_values
